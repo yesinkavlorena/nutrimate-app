@@ -1,0 +1,89 @@
+ /* ========================================
+    NutriMate Custom Style
+ ======================================== */
+
+
+/* ========================================
+   SIDEBAR COLOR
+======================================== */
+
+.nutrimate-sidebar {
+    background-color: #2E7D32;
+
+    background-image: linear-gradient(
+        180deg,
+        #2E7D32 10%,
+        #1B5E20 100%
+    );
+}
+
+
+/* ========================================
+   HEALTH SUMMARY
+======================================== */
+
+.border-left-success {
+    border-left: 0.25rem solid #66BB6A !important;
+}
+
+
+/* ========================================
+   FOOD PLACEHOLDER
+======================================== */
+
+.food-placeholder {
+    height: 140px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #f1f1f5;
+
+    color: #777;
+
+    font-size: 30px;
+}
+
+
+/* ========================================
+   GREEN TEXT
+======================================== */
+
+.text-success {
+    color: #2E7D32 !important;
+}
+
+
+/* ========================================
+   GREEN BUTTON
+======================================== */
+
+.btn-success {
+    background-color: #2E7D32;
+
+    border-color: #2E7D32;
+}
+
+.btn-success:hover {
+    background-color: #1B5E20;
+
+    border-color: #1B5E20;
+}
+
+
+/* ========================================
+   SIDEBAR TEXT
+======================================== */
+
+.nutrimate-sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.nutrimate-sidebar .nav-link:hover {
+    color: #ffffff;
+}
+
+.nutrimate-sidebar .sidebar-brand {
+    color: #ffffff;
+}
