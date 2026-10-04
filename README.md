@@ -124,4 +124,131 @@ Makanan dengan tingkat kemiripan tertinggi akan mendapatkan peringkat lebih ting
                       ▼
               ┌───────────────┐
               │    Cosine     │
+              │   Similarity  │
+              └───────┬───────┘
+                      │
+                      ▼
+              ┌───────────────┐
+              │  Top-5 Food   │
+              │ Recommendations│
+              └───────────────┘
 ```
+
+---
+
+## ✨ Features
+
+### 👤 User Profile
+
+Pengguna dapat mengisi informasi:
+
+* Usia
+* Jenis kelamin
+* Berat badan
+* Tinggi badan
+* Aktivitas fisik
+
+### ⚡ Energy Requirement
+
+Sistem menghitung:
+
+* BMI
+* Kategori BMI
+* BMR
+* TDEE
+* Target energi berdasarkan waktu makan
+
+### ❤️ Food Preferences
+
+Pengguna dapat memilih **7 makanan yang disukai** sebagai data preferensi.
+
+### 🍱 Food Recommendation
+
+Sistem menghasilkan **Top-5 rekomendasi makanan** berdasarkan:
+
+* Kebutuhan energi
+* Waktu makan
+* Karakteristik makanan
+* Preferensi pengguna
+* Cosine Similarity
+
+### 📋 Recommendation History
+
+Pengguna dapat melihat riwayat permintaan rekomendasi yang telah dilakukan sebelumnya.
+
+---
+
+## 🥗 Nutrition Data
+
+Setiap makanan dalam database memiliki informasi nutrisi dan karakteristik makanan.
+
+| Nutritional Information | Unit |
+| ----------------------- | ---- |
+| Calories                | kcal |
+| Protein                 | gram |
+| Fat                     | gram |
+| Carbohydrates           | gram |
+
+Karakteristik makanan juga digunakan sebagai fitur dalam proses **Content-Based Filtering**.
+
+Contohnya:
+
+`berkuah` · `digoreng` · `pedas` · `berbahan_ayam` · `berbahan_ikan` · `berbahan_seafood` · `bersantan` · `berbumbu_rempah` · dan karakteristik lainnya.
+
+---
+
+
+## 📊 Evaluation
+
+NutriMate dirancang untuk dievaluasi melalui beberapa pendekatan:
+
+* **Black Box Testing**
+* **User Acceptance Testing (UAT)**
+* **Leave-One-Out Cross-Validation (LOO-CV)**
+* **Hit Rate@7**
+
+Evaluasi algoritma digunakan untuk mengetahui kemampuan sistem dalam menghasilkan rekomendasi yang sesuai dengan data preferensi pengguna.
+
+---
+
+## 📚 Academic Project
+
+NutriMate dikembangkan sebagai bagian dari **Tugas Akhir** dengan topik:
+
+> **Implementasi Hybrid Recommender System Menggunakan Content-Based Filtering dan Health-Based Filtering untuk Rekomendasi Makanan Personal pada Aplikasi Berbasis Web**
+
+Project ini menjadi implementasi dari penelitian mengenai sistem rekomendasi makanan personal dengan mempertimbangkan aspek kesehatan dan preferensi pengguna.
+
+---
+
+## 🚧 Project Status
+
+**Currently in development 🚀**
+
+NutriMate masih dalam tahap pengembangan dan penyempurnaan, terutama pada:
+
+* Implementasi sistem rekomendasi
+* Penyempurnaan algoritma
+* Halaman hasil rekomendasi
+* Riwayat rekomendasi
+* Pengujian sistem
+* Evaluasi algoritma
+* Penyempurnaan UI/UX
+
+---
+
+## 👩‍💻 Developer
+
+<p align="center">
+  <strong>Yesinka Vlorena</strong>
+</p>
+
+<p align="center">
+  NutriMate — Personal Food Recommendation System
+</p>
+
+<p align="center">
+  <i>Final Project / Tugas Akhir</i>
+</p>
+
+---
