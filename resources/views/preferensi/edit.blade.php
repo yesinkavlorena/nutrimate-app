@@ -2,579 +2,209 @@
 
 @section('title', 'Edit Preferensi Makanan - NutriMate')
 
+{{-- Memakai CSS dan JS yang sama dengan halaman pilih preferensi --}}
+@push('styles')
+    <link rel="stylesheet"
+          href="{{ asset('css/preferensi.css') }}?v={{ @filemtime(public_path('css/preferensi.css')) }}">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('js/preferensi.js') }}?v={{ @filemtime(public_path('js/preferensi.js')) }}" defer></script>
+@endpush
+
 @section('content')
 
-<div class="container-fluid">
+@php
+    // pilihan yang tersimpan di database
+    $awal = collect($selected ?? [])->map(fn ($v) => (string) $v)->values()->all();
+
+    // jika validasi gagal, pilihan terakhir pengguna dipulihkan
+    $dipilih = collect(old('makanan', $awal))->map(fn ($v) => (string) $v)->all();
+@endphp
+
+<div class="pf-page"
+     id="pfPage"
+     data-max="7"
+     data-mode="edit"
+     data-save-label="Simpan Perubahan"
+     data-initial="{{ json_encode($awal) }}">
 
     {{-- Header --}}
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <header class="pf-head pf-head-split">
+
         <div>
-            <h1 class="h3 mb-1 text-gray-800">Edit Preferensi Makanan</h1>
-            <p class="mb-0 text-gray-600">
-                Ubah 7 makanan favorit kamu.
-            </p>
+            <h1 class="pf-title">Edit Preferensi Makanan</h1>
+            <p class="pf-sub" id="pfHint">Ubah 7 makanan favorit kamu.</p>
         </div>
-    </div>
+
+        <a href="{{ route('profil.create') }}" class="pf-back">
+            <i class="fas fa-arrow-left"></i>
+            Batal
+        </a>
+
+    </header>
 
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
+    <section class="pf-panel">
 
-            {{-- Search --}}
-            <div class="search-food-wrapper mb-4">
+        {{-- Pencarian + filter --}}
+        <div class="pf-toolbar">
 
-                <label for="searchFood" class="font-weight-bold text-gray-800">
-                    Cari Makanan
-                </label>
+            <div class="pf-search">
+                <i class="fas fa-search pf-search-ico"></i>
 
-                <div class="search-food-box">
+                <input type="text"
+                       id="pfSearch"
+                       placeholder="Cari makanan...  (tekan / untuk mencari)"
+                       autocomplete="off"
+                       aria-label="Cari makanan">
 
-                    <i class="fas fa-search"></i>
+                <button type="button" class="pf-clear" id="pfClear" aria-label="Hapus pencarian" hidden>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
 
-                    <input
-                        type="text"
-                        id="searchFood"
-                        class="form-control"
-                        placeholder="Ketik nama makanan..."
-                        autocomplete="off"
-                    >
+            <div class="pf-tabs" role="group" aria-label="Filter makanan">
+                <button type="button" class="pf-tab is-active" data-filter="all" aria-pressed="true">
+                    Semua <span id="pfCountAll">{{ count($makanan) }}</span>
+                </button>
+                <button type="button" class="pf-tab" data-filter="selected" aria-pressed="false">
+                    Terpilih <span id="pfCountSel">0</span>
+                </button>
+            </div>
 
+        </div>
+
+        <p class="pf-result" id="pfResult" aria-live="polite"></p>
+
+
+        {{-- Error dari server --}}
+        @if($errors->any())
+            <div class="pf-alert" role="alert">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                    @foreach($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
                 </div>
+            </div>
+        @endif
 
-                <small class="text-muted">
-                    Cari berdasarkan nama makanan.
-                </small>
+
+        <form action="{{ route('preferensi.update') }}" method="POST" id="pfForm" novalidate>
+
+            @csrf
+
+            {{-- Daftar makanan --}}
+            <div class="pf-grid" id="pfGrid">
+
+                @foreach ($makanan as $item)
+
+                    <label class="pf-item" data-name="{{ mb_strtolower($item->nama_makanan) }}">
+
+                        <input type="checkbox"
+                               class="pf-input"
+                               name="makanan[]"
+                               value="{{ $item->id_makanan }}"
+                               {{ in_array((string) $item->id_makanan, $dipilih, true) ? 'checked' : '' }}>
+
+                        <span class="pf-card">
+
+                            <span class="pf-badge"><i class="fas fa-check"></i></span>
+
+                            <span class="pf-img">
+                                @if($item->gambar_makanan)
+                                    <img src="{{ $item->gambar_makanan }}"
+                                         alt="{{ $item->nama_makanan }}"
+                                         loading="lazy"
+                                         decoding="async">
+                                @else
+                                    <span class="pf-img-ph"><i class="fas fa-utensils"></i></span>
+                                @endif
+                            </span>
+
+                            <span class="pf-name">{{ $item->nama_makanan }}</span>
+
+                            <span class="pf-kcal">
+                                <i class="fas fa-fire-alt"></i>
+                                {{ $item->kalori }} kkal
+                            </span>
+
+                        </span>
+
+                    </label>
+
+                @endforeach
 
             </div>
 
 
-            {{-- Counter + Reset --}}
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            {{-- Tidak ditemukan --}}
+            <div class="pf-empty" id="pfEmpty" hidden>
+                <i class="fas fa-search"></i>
+                <h3 id="pfEmptyTitle">Makanan tidak ditemukan</h3>
+                <p id="pfEmptyText">Coba gunakan kata pencarian lain.</p>
+            </div>
 
-                <span class="font-weight-bold text-gray-800">
-                    Pilih Makanan
-                </span>
 
-                <div class="d-flex align-items-center">
+            {{-- Bilah bawah: selalu terlihat saat menggulir --}}
+            <div class="pf-dock" id="pfDock" data-state="empty">
 
-                    {{-- Reset --}}
-                    <button
-                        type="button"
-                        id="reset-button"
-                        class="btn btn-outline-secondary btn-sm mr-2"
-                    >
-                        <i class="fas fa-undo mr-1"></i>
-                        Reset Pilihan
+                {{-- Cincin progres + status --}}
+                <div class="pf-dock-head">
+
+                    <div class="pf-ring" id="pfRingWrap">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <circle class="pf-ring-bg" cx="32" cy="32" r="26"></circle>
+                            <circle class="pf-ring-fg" id="pfRing" cx="32" cy="32" r="26"></circle>
+                        </svg>
+                        <span class="pf-ring-num" id="pfCount">0/7</span>
+                    </div>
+
+                    <div class="pf-dock-info">
+                        <strong id="pfMeterTitle">Mulai memilih</strong>
+                        <span id="pfMeterText">Klik kartu makanan untuk memilih</span>
+                    </div>
+
+                </div>
+
+                {{-- Slot pilihan (diisi JS, satu slot per makanan) --}}
+                <div class="pf-slots" id="pfSlots" role="group" aria-label="Makanan terpilih"></div>
+
+                <div class="pf-dock-actions">
+                    {{-- Kosongkan semua --}}
+                    <button type="button" class="pf-reset" id="pfReset" aria-label="Kosongkan semua pilihan" disabled>
+                        <i class="fas fa-eraser"></i>
+                        <span>Kosongkan</span>
                     </button>
 
-                    {{-- Counter --}}
-                    <span
-                        id="selected-count"
-                        class="badge badge-success px-3 py-2"
-                    >
-                        0/7
-                    </span>
+                    {{-- Kembali ke pilihan yang tersimpan --}}
+                    <button type="button" class="pf-reset pf-restore" id="pfRestore" aria-label="Kembalikan ke pilihan tersimpan" disabled>
+                        <i class="fas fa-undo"></i>
+                        <span>Kembalikan</span>
+                    </button>
+
+                    <button type="submit" class="pf-save" id="pfSave" disabled>
+                        <span class="pf-save-label">
+                            <i class="fas fa-save"></i>
+                            <span id="pfSaveLabel">Belum ada perubahan</span>
+                        </span>
+                        <span class="pf-save-wait" hidden>
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Menyimpan...
+                        </span>
+                    </button>
 
                 </div>
 
             </div>
 
+        </form>
 
-            {{-- Form --}}
-            <form
-                action="{{ route('preferensi.update') }}"
-                method="POST"
-            >
-
-                @csrf
-
-                <div class="food-selection-box">
-
-                    <div class="row" id="food-list">
-
-                        @foreach ($makanan as $item)
-
-                            <div
-                                class="col-xl-3 col-lg-4 col-md-6 mb-4 food-item"
-                                data-food-name="{{ strtolower($item->nama_makanan) }}"
-                            >
-
-                                <label class="food-card-wrapper">
-
-                                    <input
-                                        type="checkbox"
-                                        name="makanan[]"
-                                        value="{{ $item->id_makanan }}"
-                                        class="food-checkbox"
-
-                                        {{ in_array(
-                                            $item->id_makanan,
-                                            $selected ?? []
-                                        ) ? 'checked' : '' }}
-                                    >
-
-                                    <div class="food-card">
-
-                                        <div class="food-image">
-
-                                            @if($item->gambar_makanan)
-
-                                                <img
-                                                    src="{{ $item->gambar_makanan }}"
-                                                    alt="{{ $item->nama_makanan }}"
-                                                >
-
-                                            @else
-
-                                                <div class="food-image-placeholder">
-                                                    <i class="fas fa-utensils"></i>
-                                                </div>
-
-                                            @endif
-
-                                        </div>
-
-
-                                        <div class="food-name">
-                                            {{ $item->nama_makanan }}
-                                        </div>
-
-                                        <div class="food-calorie">
-                                            {{ $item->kalori }} kkal
-                                        </div>
-
-                                    </div>
-
-                                </label>
-
-                            </div>
-
-                        @endforeach
-
-                    </div>
-
-
-                    {{-- Tidak ditemukan --}}
-                    <div
-                        id="no-food-result"
-                        class="text-center py-5"
-                        style="display: none;"
-                    >
-
-                        <i class="fas fa-search fa-3x text-gray-300 mb-3"></i>
-
-                        <h5 class="text-gray-600">
-                            Makanan tidak ditemukan
-                        </h5>
-
-                        <p class="text-muted mb-0">
-                            Coba gunakan kata pencarian lain.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                {{-- Button --}}
-                <div class="d-flex justify-content-end mt-4">
-
-                    <a
-                        href="{{ route('profil.create') }}"
-                        class="btn btn-secondary mr-2"
-                    >
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Batal
-                    </a>
-
-                    <button
-                        type="submit"
-                        id="save-button"
-                        class="btn btn-success px-4"
-                        disabled
-                    >
-                        <i class="fas fa-save mr-2"></i>
-                        Simpan Perubahan
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-    </div>
+    </section>
 
 </div>
 
+<div class="pf-toast" id="pfToast" role="status" aria-live="polite"></div>
+
 @endsection
-
-
-@push('styles')
-
-<style>
-
-
-
-    .search-food-wrapper {
-        max-width: 600px;
-    }
-
-    .search-food-box {
-        position: relative;
-        margin-top: 8px;
-    }
-
-    .search-food-box i {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6c757d;
-        z-index: 2;
-    }
-
-    .search-food-box input {
-        padding-left: 42px;
-        height: 45px;
-        border-radius: 8px;
-        border: 1px solid #d1d3e2;
-    }
-
-    .search-food-box input:focus {
-        border-color: #28a745;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.15);
-    }
-
-    .food-selection-box {
-        height: 450px;
-        overflow-y: auto;
-        padding: 10px;
-    }
-
-    .food-selection-box::-webkit-scrollbar {
-        width: 7px;
-    }
-
-    .food-selection-box::-webkit-scrollbar-thumb {
-        background: #b7d8bd;
-        border-radius: 10px;
-    }
-
-
-    /* ==============================
-       FOOD CARD
-    ============================== */
-
-    .food-card-wrapper {
-        display: block;
-        cursor: pointer;
-        margin: 0;
-        height: 100%;
-    }
-
-    .food-card-wrapper input {
-        display: none;
-    }
-
-    .food-card {
-        position: relative;
-        height: 100%;
-        padding: 10px;
-
-        border: 2px solid #e3e6f0;
-        border-radius: 12px;
-
-        background: #fff;
-
-        transition: all 0.2s ease;
-    }
-
-    .food-card:hover {
-        border-color: #28a745;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .food-card-wrapper input:checked + .food-card {
-        border-color: #28a745;
-        background-color: #f0fff3;
-        box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.12);
-    }
-
-    .food-card-wrapper input:checked + .food-card::after {
-        content: "\f00c";
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-
-        position: absolute;
-        top: 8px;
-        right: 8px;
-
-        width: 28px;
-        height: 28px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 50%;
-
-        background: #28a745;
-        color: white;
-
-        font-size: 13px;
-    }
-
-
-    /* ==============================
-       FOOD IMAGE
-    ============================== */
-
-    .food-image {
-        width: 100%;
-        height: 150px;
-
-        margin-bottom: 12px;
-
-        border-radius: 10px;
-        overflow: hidden;
-
-        background-color: #e8f5e9;
-    }
-
-    .food-image img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-        display: block;
-
-        transition: transform 0.2s ease;
-    }
-
-    .food-card:hover .food-image img {
-        transform: scale(1.03);
-    }
-
-    .food-image-placeholder {
-        width: 100%;
-        height: 100%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        color: #2E7D32;
-        font-size: 35px;
-    }
-
-
-    .food-name {
-        font-weight: 700;
-        color: #3a3b45;
-        margin-bottom: 5px;
-    }
-
-    .food-calorie {
-        font-size: 13px;
-        color: #858796;
-    }
-
-
-
-    #reset-button {
-        border-radius: 6px;
-    }
-
-    #reset-button:hover {
-        background-color: #6c757d;
-        border-color: #6c757d;
-        color: #fff;
-    }
-
-</style>
-
-@endpush
-
-
-@push('scripts')
-
-<script>
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    const searchInput =
-        document.getElementById('searchFood');
-
-    const foodItems =
-        document.querySelectorAll('.food-item');
-
-    const noFoodResult =
-        document.getElementById('no-food-result');
-
-    const checkboxes =
-        document.querySelectorAll('.food-checkbox');
-
-    const selectedCount =
-        document.getElementById('selected-count');
-
-    const saveButton =
-        document.getElementById('save-button');
-
-    const resetButton =
-        document.getElementById('reset-button');
-
-    const maxSelection = 7;
-
-
-    function updateCounter() {
-
-        const selected =
-            document.querySelectorAll(
-                '.food-checkbox:checked'
-            ).length;
-
-
-        selectedCount.textContent =
-            selected + '/' + maxSelection;
-
-
-
-
-        if (selected === maxSelection) {
-
-            saveButton.disabled = false;
-
-        } else {
-
-            saveButton.disabled = true;
-
-        }
-
-
-
-        checkboxes.forEach(function (checkbox) {
-
-            if (!checkbox.checked) {
-
-                checkbox.disabled =
-                    selected >= maxSelection;
-
-            }
-
-        });
-
-    }
-
-
-
-    resetButton.addEventListener('click', function () {
-
-        const selected =
-            document.querySelectorAll(
-                '.food-checkbox:checked'
-            ).length;
-
-
-
-
-        if (selected === 0) {
-            return;
-        }
-
-
-
-        const confirmReset = confirm(
-            'Apakah kamu yakin ingin mereset semua pilihan makanan?'
-        );
-
-
-        if (!confirmReset) {
-            return;
-        }
-
-
-
-
-        checkboxes.forEach(function (checkbox) {
-
-            checkbox.checked = false;
-
-            checkbox.disabled = false;
-
-        });
-
-
-
-
-        updateCounter();
-
-    });
-
-
-    searchInput.addEventListener(
-        'input',
-        function () {
-
-            const keyword =
-                this.value.toLowerCase().trim();
-
-            let visibleCount = 0;
-
-
-            foodItems.forEach(function (item) {
-
-                const foodName =
-                    item.dataset.foodName;
-
-
-                if (foodName.includes(keyword)) {
-
-                    item.style.display = '';
-
-                    visibleCount++;
-
-                } else {
-
-                    item.style.display = 'none';
-
-                }
-
-            });
-
-
-            if (visibleCount === 0) {
-
-                noFoodResult.style.display = 'block';
-
-            } else {
-
-                noFoodResult.style.display = 'none';
-
-            }
-
-        }
-    );
-
-
-    checkboxes.forEach(function (checkbox) {
-
-        checkbox.addEventListener(
-            'change',
-            function () {
-
-                updateCounter();
-
-            }
-        );
-
-    });
-
-
-    updateCounter();
-
-});
-
-</script>
-
-@endpush

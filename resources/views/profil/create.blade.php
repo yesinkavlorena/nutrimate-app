@@ -4,12 +4,12 @@
 
 @section('content')
 
-<div class="container-fluid">
+<div class="container-fluid pf-page">
 
     {{-- =========================================================
          HEADER
     ========================================================== --}}
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 pf-hero">
 
         <div>
 
@@ -39,7 +39,8 @@
 
             <button type="button"
                     class="close"
-                    data-dismiss="alert">
+                    data-bs-dismiss="alert"
+                    aria-label="Tutup">
 
                 <span>&times;</span>
 
@@ -61,7 +62,7 @@
         ====================================================== --}}
         <div class="col-xl-4 col-lg-5 mb-4">
 
-            <div class="card shadow border-0 h-100">
+            <div class="card pf-panel shadow border-0 h-100">
 
                 <div class="card-body text-center">
 
@@ -74,12 +75,14 @@
                     </div>
 
 
-                    <p class="text-muted mb-1">
+                    @php
+                        $jam = now()->timezone('Asia/Jakarta')->hour;
+                        $sapaan = $jam < 11 ? 'Selamat Pagi'
+                                : ($jam < 15 ? 'Selamat Siang'
+                                : ($jam < 18 ? 'Selamat Sore' : 'Selamat Malam'));
+                    @endphp
 
-                        Good Morning,
-
-                    </p>
-
+                    <p class="text-muted mb-1">{{ $sapaan }},</p>
 
                     <h2 class="font-weight-bold text-success mb-2">
 
@@ -169,7 +172,7 @@
         ====================================================== --}}
         <div class="col-xl-8 col-lg-7 mb-4">
 
-            <div class="card shadow border-0">
+            <div class="card pf-panel shadow border-0">
 
                 <div class="card-header bg-white py-3">
 
@@ -190,9 +193,7 @@
                     @if($profil)
 
 
-                        {{-- =================================================
-                             NAMA
-                        ================================================== --}}
+                        {{-- NAMA --}}
                         <div class="profile-info-box mb-3">
 
                             <div class="profile-label">
@@ -210,16 +211,14 @@
                         </div>
 
 
-                        {{-- =================================================
-                             USIA & JENIS KELAMIN
-                        ================================================== --}}
+                        {{-- USIA, JENIS KELAMIN, BERAT, TINGGI --}}
                         <div class="row">
 
 
                             {{-- Usia --}}
                             <div class="col-md-6 mb-3">
 
-                                <div class="profile-info-box h-100">
+                                <div class="profile-info-box pf-teal h-100">
 
                                     <div class="profile-label">
 
@@ -247,7 +246,7 @@
                             {{-- Jenis Kelamin --}}
                             <div class="col-md-6 mb-3">
 
-                                <div class="profile-info-box h-100">
+                                <div class="profile-info-box pf-purple h-100">
 
                                     <div class="profile-label">
 
@@ -266,12 +265,10 @@
                             </div>
 
 
-                            {{-- =================================================
-                                 BERAT BADAN
-                            ================================================== --}}
+                            {{-- Berat Badan --}}
                             <div class="col-md-6 mb-3">
 
-                                <div class="profile-info-box h-100">
+                                <div class="profile-info-box pf-orange h-100">
 
                                     <div class="profile-label">
 
@@ -296,12 +293,10 @@
                             </div>
 
 
-                            {{-- =================================================
-                                 TINGGI BADAN
-                            ================================================== --}}
+                            {{-- Tinggi Badan --}}
                             <div class="col-md-6 mb-3">
 
-                                <div class="profile-info-box h-100">
+                                <div class="profile-info-box pf-yellow h-100">
 
                                     <div class="profile-label">
 
@@ -329,9 +324,7 @@
                         </div>
 
 
-                        {{-- =================================================
-                             AKTIVITAS FISIK
-                        ================================================== --}}
+                        {{-- AKTIVITAS FISIK (3 TINGKAT) --}}
                         <div class="profile-info-box">
 
                             <div class="profile-label">
@@ -349,15 +342,17 @@
 
                             @php
 
+                                // Faktor aktivitas: Ringan 1,53 | Sedang 1,76 | Berat 2,25
                                 $activityProgress = [
 
-                                    'Sedentary' => 20,
+                                    'Ringan' => 33,
 
-                                    'Ringan' => 40,
+                                    'Sedang' => 66,
 
-                                    'Sedang' => 60,
+                                    'Berat' => 100,
 
-                                    'Berat' => 80,
+                                    // Cadangan untuk data lama di database
+                                    'Sedentary' => 33,
 
                                     'Sangat Berat' => 100,
 
@@ -386,9 +381,7 @@
                     @else
 
 
-                        {{-- =================================================
-                             BELUM ADA PROFIL
-                        ================================================== --}}
+                        {{-- BELUM ADA PROFIL --}}
                         <div class="text-center py-5">
 
                             <i class="fas fa-user-plus fa-4x
@@ -444,12 +437,10 @@
 
             <div class="col-12 mb-4">
 
-                <div class="card shadow border-0">
+                <div class="card pf-panel shadow border-0">
 
 
-                    {{-- =================================================
-                         HEADER PREFERENSI
-                    ================================================== --}}
+                    {{-- HEADER PREFERENSI --}}
                     <div class="card-header bg-white py-3
                                 d-flex justify-content-between
                                 align-items-center">
@@ -464,9 +455,7 @@
                         </h6>
 
 
-                        {{-- =================================================
-                             TOMBOL EDIT PREFERENSI
-                        ================================================== --}}
+                        {{-- TOMBOL EDIT PREFERENSI --}}
                         <a href="{{ route('preferensi.edit') }}"
                            class="btn btn-success btn-sm">
 
@@ -480,9 +469,7 @@
                     </div>
 
 
-                    {{-- =================================================
-                         ISI PREFERENSI
-                    ================================================== --}}
+                    {{-- ISI PREFERENSI --}}
                     <div class="card-body">
 
 
@@ -501,9 +488,7 @@
                                         <div class="food-preference-card h-100">
 
 
-                                            {{-- =================================================
-                                                 GAMBAR MAKANAN
-                                            ================================================== --}}
+                                            {{-- GAMBAR MAKANAN --}}
                                             <div class="food-preference-image">
 
 
@@ -515,6 +500,7 @@
                                                     <img
                                                         src="{{ $item->makanan->gambar_makanan }}"
                                                         alt="{{ $item->makanan->nama_makanan }}"
+                                                        loading="lazy"
                                                     >
 
                                                 @else
@@ -531,9 +517,7 @@
                                             </div>
 
 
-                                            {{-- =================================================
-                                                 INFORMASI MAKANAN
-                                            ================================================== --}}
+                                            {{-- INFORMASI MAKANAN --}}
                                             <div class="profile-info-box">
 
 
@@ -544,7 +528,7 @@
                                                 </div>
 
 
-                                                <div class="font-weight-bold text-gray-800">
+                                                <div class="font-weight-bold text-gray-800 food-pref-name">
 
                                                     {{ $item->makanan->nama_makanan ?? 'Makanan tidak ditemukan' }}
 
@@ -581,9 +565,7 @@
                         @else
 
 
-                            {{-- =================================================
-                                 BELUM ADA PREFERENSI
-                            ================================================== --}}
+                            {{-- BELUM ADA PREFERENSI --}}
                             <div class="text-center py-4">
 
 
@@ -639,224 +621,13 @@
 
 </div>
 
+@endsection
 
-{{-- =============================================================
-     STYLE KHUSUS HALAMAN PROFIL
-============================================================= --}}
 @push('styles')
-
-<style>
-
-
-    /* =========================================================
-       AVATAR
-    ========================================================== */
-
-    .profile-avatar {
-
-        width: 90px;
-
-        height: 90px;
-
-        margin-left: auto;
-
-        margin-right: auto;
-
-        border-radius: 50%;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        background: rgba(46, 125, 50, 0.12);
-
-        color: #2E7D32;
-
-        font-size: 40px;
-
-    }
-
-
-    /* =========================================================
-       PROFILE INFO BOX
-    ========================================================== */
-
-    .profile-info-box {
-
-        padding: 18px 20px;
-
-        background: #f8f9fc;
-
-        border-radius: 8px;
-
-        border-left: 4px solid #2E7D32;
-
-    }
-
-
-    /* =========================================================
-       LABEL
-    ========================================================== */
-
-    .profile-label {
-
-        font-size: 11px;
-
-        font-weight: 700;
-
-        color: #858796;
-
-        letter-spacing: 0.5px;
-
-        margin-bottom: 5px;
-
-    }
-
-
-    /* =========================================================
-       VALUE
-    ========================================================== */
-
-    .profile-value {
-
-        font-size: 18px;
-
-        font-weight: 700;
-
-        color: #2E7D32;
-
-    }
-
-
-    /* =========================================================
-       UNIT
-    ========================================================== */
-
-    .profile-unit {
-
-        font-size: 13px;
-
-        font-weight: 400;
-
-        color: #858796;
-
-    }
-
-
-    /* =========================================================
-       PROGRESS
-    ========================================================== */
-
-    .progress {
-
-        background-color: #eaecf4;
-
-        border-radius: 10px;
-
-    }
-
-
-    .progress-bar {
-
-        border-radius: 10px;
-
-    }
-
-
-    /* =========================================================
-       KARTU PREFERENSI MAKANAN
-    ========================================================== */
-
-    .food-preference-card {
-
-        height: 100%;
-
-        transition: all 0.2s ease;
-
-    }
-
-
-    .food-preference-card:hover {
-
-        transform: translateY(-3px);
-
-    }
-
-
-    /* =========================================================
-       GAMBAR MAKANAN
-    ========================================================== */
-
-    .food-preference-image {
-
-        width: 100%;
-
-        height: 180px;
-
-        margin-bottom: 10px;
-
-        border-radius: 10px;
-
-        overflow: hidden;
-
-        background-color: #e8f5e9;
-
-    }
-
-
-    .food-preference-image img {
-
-        width: 100%;
-
-        height: 100%;
-
-        object-fit: cover;
-
-        display: block;
-
-        transition: transform 0.2s ease;
-
-    }
-
-
-    .food-preference-card:hover
-    .food-preference-image img {
-
-        transform: scale(1.03);
-
-    }
-
-
-    /* =========================================================
-       PLACEHOLDER JIKA GAMBAR TIDAK TERSEDIA
-    ========================================================== */
-
-    .food-image-placeholder {
-
-        width: 100%;
-
-        height: 100%;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        background: #e8f5e9;
-
-        color: #2E7D32;
-
-        font-size: 35px;
-
-    }
-
-
-</style>
-
+    <link rel="stylesheet"
+          href="{{ asset('css/profil-show.css') }}?v={{ filemtime(public_path('css/profil-show.css')) }}">
 @endpush
 
-
-@endsection
+@push('scripts')
+    <script src="{{ asset('js/profil-show.js') }}?v={{ filemtime(public_path('js/profil-show.js')) }}" defer></script>
+@endpush

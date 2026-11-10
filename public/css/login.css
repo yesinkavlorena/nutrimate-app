@@ -1,0 +1,425 @@
+/* =========================================================
+   NutriMate - Halaman Masuk
+   Satu gaya dengan dashboard dan halaman lain.
+========================================================= */
+
+.lg-page, .lg-page *, .lg-page *::before, .lg-page *::after { box-sizing: border-box; }
+
+.lg-body { margin: 0; background: #f3fcf8; }
+
+.lg-page {
+    --g: #1cc88a;
+    --g-d: #13a46f;
+    --ink: #2e3b34;
+    --muted: #7d8984;
+    --line: #e4ede8;
+    --err: #d9483b;
+
+    font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: #f3fcf8;
+}
+
+.lg-page button, .lg-page input { font: inherit; }
+.lg-page [hidden] { display: none !important; }
+
+.lg-page a:focus-visible,
+.lg-page button:focus-visible {
+    outline: 3px solid rgba(28, 200, 138, .45);
+    outline-offset: 2px;
+}
+
+
+/* ---------- Susunan halaman ---------- */
+.lg-page {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    background: linear-gradient(135deg, #0f8f62 0%, #13a46f 45%, #2fd9a0 100%);
+}
+
+
+/* ---------- Latar belakang ---------- */
+.lg-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* gelembung cahaya bergerak */
+.lg-blob {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, .32), rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+    transition: transform .4s ease-out;
+    animation: lgDrift 14s ease-in-out infinite;
+}
+.lg-blob.b1 { width: 460px; height: 460px; top: -140px; left: -120px; }
+.lg-blob.b2 { width: 380px; height: 380px; bottom: -120px; right: -80px; animation-delay: -5s; }
+.lg-blob.b3 { width: 260px; height: 260px; top: 45%; left: 55%; animation-delay: -9s; opacity: .7; }
+@keyframes lgDrift {
+    0%, 100% { margin: 0; }
+    50%      { margin: 26px 0 0 18px; }
+}
+
+/* ikon makanan melayang */
+.lg-float {
+    position: absolute;
+    color: rgba(255, 255, 255, .22);
+    pointer-events: none;
+    transition: transform .5s ease-out;
+    animation: lgBob 7s ease-in-out infinite;
+}
+.lg-float i { display: block; }
+.lg-float.f1 { top: 9%;  left: 62%; font-size: 3.2rem; animation-delay: 0s; }
+.lg-float.f2 { top: 24%; left: 8%;  font-size: 2.3rem; animation-delay: -1.5s; }
+.lg-float.f3 { top: 70%; left: 70%; font-size: 3rem;   animation-delay: -3s; }
+.lg-float.f4 { top: 82%; left: 14%; font-size: 2.4rem; animation-delay: -4.5s; }
+.lg-float.f5 { top: 52%; left: 88%; font-size: 2rem;   animation-delay: -2.2s; }
+.lg-float.f6 { top: 42%; left: 4%;  font-size: 1.9rem; animation-delay: -5.5s; }
+@keyframes lgBob {
+    0%, 100% { margin-top: 0;    rotate: -6deg; }
+    50%      { margin-top: -16px; rotate: 8deg; }
+}
+
+
+/* ---------- Sisi kanan: formulir ---------- */
+.lg-main {
+    position: relative;
+    z-index: 1;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+}
+
+.lg-card {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    padding: 2.2rem 2rem 1.8rem;
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    background: linear-gradient(135deg, #f7fffb 0%, #ffffff 60%);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .22);
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform .2s ease-out, box-shadow .3s ease;
+    animation: lgIn .7s cubic-bezier(.22,1,.36,1) both;
+}
+.lg-card:hover { box-shadow: 0 30px 70px rgba(0, 0, 0, .28); }
+@keyframes lgIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; } }
+
+/* cahaya hijau mengikuti kursor */
+.lg-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(300px circle at var(--mx, 90%) var(--my, 6%), rgba(28, 200, 138, .2), transparent 70%);
+}
+.lg-card > * { position: relative; }
+
+.lg-avatar {
+    width: 66px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    color: #fff;
+    background: linear-gradient(135deg, #36d6a0, var(--g-d));
+    box-shadow: 0 10px 22px rgba(28, 200, 138, .38);
+    transition: transform .5s cubic-bezier(.22,1,.36,1);
+}
+.lg-avatar::after {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    border: 2px solid rgba(28, 200, 138, .45);
+    animation: lgPulse 2.4s ease-out infinite;
+}
+.lg-avatar { position: relative; }
+.lg-card:hover .lg-avatar { transform: scale(1.08) rotate(-6deg); }
+@keyframes lgPulse {
+    0%   { transform: scale(.92); opacity: .9; }
+    100% { transform: scale(1.3); opacity: 0; }
+}
+
+.lg-title {
+    margin: 0 0 .25rem;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #1f6f50, var(--g));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.lg-lead { margin: 0 0 1.5rem; text-align: center; color: var(--muted); }
+
+
+/* ---------- Pesan ---------- */
+.lg-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    margin-bottom: 1rem;
+    padding: .75rem 1rem;
+    border-left: 5px solid var(--g);
+    border-radius: 12px;
+    background: #e9f9f2;
+    color: #146c4a;
+    font-size: .9rem;
+    font-weight: 600;
+    animation: lgSlide .45s ease;
+}
+.lg-alert.err { border-left-color: var(--err); background: #fdecea; color: #a8362b; }
+.lg-alert i { margin-top: .15rem; }
+.lg-alert .lg-alert-list { display: grid; gap: 2px; }
+@keyframes lgSlide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+
+/* ---------- Kolom isian (label mengambang) ---------- */
+.lg-field { position: relative; margin-bottom: 1.15rem; }
+
+.lg-field input[type="email"],
+.lg-field input[type="password"],
+.lg-field input[type="text"] {
+    width: 100%;
+    height: 56px;
+    padding: 1rem 3rem 0 3rem;
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    background: #f3fbf7;
+    color: var(--ink);
+    outline: none;
+    transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.lg-field input:hover { border-color: rgba(28, 200, 138, .65); transform: translateY(-1px); }
+.lg-field input:focus {
+    background: #fff;
+    border-color: var(--g);
+    box-shadow: 0 0 0 .25rem rgba(28, 200, 138, .16);
+}
+
+.lg-field label {
+    position: absolute;
+    left: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-weight: 600;
+    pointer-events: none;
+    transform-origin: left center;
+    transition: top .2s ease, transform .2s ease, color .2s ease;
+}
+.lg-field input:focus + label,
+.lg-field input:not(:placeholder-shown) + label,
+.lg-field input:-webkit-autofill + label {
+    top: 11px;
+    transform: translateY(0) scale(.78);
+    color: var(--g-d);
+}
+
+.lg-ico {
+    position: absolute;
+    left: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    transition: color .25s ease, transform .35s cubic-bezier(.22,1,.36,1);
+}
+.lg-field:focus-within .lg-ico,
+.lg-field:hover .lg-ico { color: var(--g-d); }
+.lg-field:focus-within .lg-ico { transform: translateY(-50%) scale(1.15); }
+
+.lg-eye {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background .25s ease, color .25s ease, transform .3s ease;
+}
+.lg-eye:hover { background: rgba(28, 200, 138, .15); color: var(--g-d); transform: translateY(-50%) scale(1.1); }
+
+.lg-field.has-error input { border-color: var(--err); background: #fff7f6; }
+.lg-field.has-error input:focus { box-shadow: 0 0 0 .25rem rgba(217, 72, 59, .16); }
+.lg-field.has-error .lg-ico { color: var(--err); }
+.lg-field.has-error { animation: lgShake .45s ease; }
+@keyframes lgShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(3px); }
+}
+
+.lg-msg {
+    margin: .4rem .3rem 0;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--err);
+    animation: lgSlide .35s ease;
+}
+.lg-msg i { margin-right: .3rem; }
+
+.lg-caps {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: -.4rem 0 1rem .3rem;
+    font-size: .82rem;
+    font-weight: 700;
+    color: #a87d06;
+    animation: lgSlide .3s ease;
+}
+
+
+/* ---------- Ingat saya + lupa password ---------- */
+.lg-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 14px;
+    margin-bottom: 1.3rem;
+}
+.lg-check {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    cursor: pointer;
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+.lg-check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.lg-box {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #c9dcd2;
+    border-radius: 7px;
+    background: #fff;
+    color: transparent;
+    font-size: .65rem;
+    transition: background .25s ease, border-color .25s ease, color .25s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.lg-check:hover .lg-box { border-color: var(--g); transform: scale(1.1); }
+.lg-check input:checked + .lg-box {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, #2fd9a0, var(--g-d));
+}
+.lg-check input:focus-visible + .lg-box { outline: 3px solid rgba(28, 200, 138, .45); outline-offset: 2px; }
+
+
+/* ---------- Tautan dengan garis bawah bergerak ---------- */
+.lg-link {
+    position: relative;
+    color: var(--g-d);
+    font-weight: 800;
+    text-decoration: none;
+}
+.lg-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--g-d), #4ee3b0);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.lg-link:hover::after { transform: scaleX(1); transform-origin: left; }
+.lg-link:hover { color: #0f8f62; }
+
+
+/* ---------- Tombol masuk ---------- */
+.lg-btn {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 54px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2fd9a0, var(--g-d));
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.02rem;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(28, 200, 138, .36);
+    transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.lg-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .55), transparent);
+    transform: skewX(-18deg);
+}
+.lg-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 30px rgba(28, 200, 138, .46);
+    filter: brightness(1.05);
+}
+.lg-btn:hover::before { animation: lgSweep .8s ease; }
+.lg-btn:active { transform: translateY(0); }
+.lg-btn[disabled] { cursor: progress; filter: saturate(.7); transform: none; }
+.lg-btn i { margin-right: .5rem; transition: transform .3s ease; }
+.lg-btn:hover .fa-sign-in-alt { transform: translateX(4px); }
+@keyframes lgSweep { to { left: 140%; } }
+
+.lg-foot {
+    margin: 1.4rem 0 0;
+    text-align: center;
+    color: var(--muted);
+    font-weight: 600;
+}
+.lg-copy { margin: 1.2rem 0 0; text-align: center; font-size: .78rem; color: var(--muted); }
+
+
+/* ---------- Layar kecil ---------- */
+@media (max-width: 991.98px) {
+    .lg-float.f3, .lg-float.f4, .lg-float.f6 { display: none; }
+}
+@media (max-width: 480px) {
+    .lg-card { padding: 1.8rem 1.3rem 1.5rem; }
+}
+
+
+/* ---------- Hormati pengaturan "kurangi animasi" ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .lg-page *, .lg-page *::before, .lg-page *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    .lg-card { transform: none; }
+}

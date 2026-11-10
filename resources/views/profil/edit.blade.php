@@ -1,365 +1,254 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Edit Profil - NutriMate')
+@section('title', 'Profil Pengguna - NutriMate')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/profil.css') }}">
+@endpush
 
 @section('content')
+<div class="profile-page">
+    <div class="profile-container">
 
-<div class="container-fluid">
-
-    {{-- Header --}}
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-
-        <div>
-
-            <h1 class="h3 mb-1 text-gray-800">
-                {{ $profil ? 'Edit Profil' : 'Isi Profil' }}
-            </h1>
-
-            <p class="mb-0 text-muted">
-                Masukkan data diri kamu untuk membantu NutriMate memberikan rekomendasi makanan personal.
-            </p>
-
-        </div>
-
-        <a href="{{ route('profil.create') }}"
-           class="btn btn-secondary btn-sm">
-
-            <i class="fas fa-arrow-left mr-1"></i>
-
-            Kembali
-
-        </a>
-
-    </div>
-
-
-    {{-- Error --}}
-    @if($errors->any())
-
-        <div class="alert alert-danger shadow-sm">
-
-            <div class="font-weight-bold mb-2">
-
-                <i class="fas fa-exclamation-circle mr-2"></i>
-
-                Terdapat kesalahan:
-
+        <div class="profile-header">
+            <div class="profile-header-icon">
+                <i class="fas fa-user-edit"></i>
             </div>
-
-            <ul class="mb-0">
-
-                @foreach($errors->all() as $error)
-
-                    <li>{{ $error }}</li>
-
-                @endforeach
-
-            </ul>
-
+            <div>
+                <span class="profile-eyebrow">PENGATURAN AKUN</span>
+                <h1>Profil Pengguna</h1>
+                <p>Kenali kebutuhanmu, temukan rekomendasi makanan yang sesuai.</p>
+            </div>
         </div>
 
-    @endif
+        @if (session('success'))
+            <div class="profile-alert profile-alert-success">
+                <i class="fas fa-check-circle"></i>
+                {{ session('success') }}
+            </div>
+        @endif
 
+        @if ($errors->any())
+            <div class="profile-alert profile-alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                    <strong>Periksa kembali data kamu.</strong>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
 
-    <div class="row justify-content-center">
+        <form id="profileForm"
+              action="{{ route('profil.store') }}"
+              method="POST">
+            @csrf
 
-        <div class="col-xl-8 col-lg-10">
-
-            <div class="card shadow border-0 mb-4">
-
-                <div class="card-header bg-white py-3">
-
-                    <h6 class="m-0 font-weight-bold text-success">
-
-                        <i class="fas fa-user-edit mr-2"></i>
-
-                        Data Diri
-
-                    </h6>
-
+            <section class="profile-card">
+                <div class="profile-card-heading">
+                    <div class="section-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h2>Informasi Pribadi</h2>
+                        <p>Informasi dasar tentang dirimu.</p>
+                    </div>
                 </div>
 
+                <div class="profile-form-grid">
+                    <div class="profile-field">
+                        <label for="usia">Usia <span>*</span></label>
+                        <div class="profile-input-wrap">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="number"
+                                   id="usia"
+                                   name="usia"
+                                   min="1"
+                                   max="120"
+                                   value="{{ old('usia', $profil->usia ?? '') }}"
+                                   placeholder="Masukkan usia"
+                                   required>
+                            <span class="input-unit">tahun</span>
+                        </div>
+                        <small>Masukkan usiamu saat ini.</small>
+                    </div>
 
-                <div class="card-body">
+                    <div class="profile-field">
+                        <label>Jenis Kelamin <span>*</span></label>
 
-                    <form
-                        action="{{ route('profil.store') }}"
-                        method="POST"
-                    >
-
-                        @csrf
-
-
-                        {{-- USIA --}}
-                        <div class="form-group">
-
-                            <label
-                                for="usia"
-                                class="font-weight-bold"
-                            >
-                                Usia
+                        <div class="gender-options">
+                            <label class="gender-option">
+                                <input type="radio"
+                                       name="jenis_kelamin"
+                                       value="Laki-laki"
+                                       {{ old('jenis_kelamin', $profil->jenis_kelamin ?? '') == 'Laki-laki' ? 'checked' : '' }}
+                                       required>
+                                <span class="gender-option-content">
+                                    <i class="fas fa-mars"></i>
+                                    <span>Laki-laki</span>
+                                </span>
                             </label>
 
-                            <div class="input-group">
-
-                                <input
-                                    type="number"
-                                    id="usia"
-                                    name="usia"
-                                    class="form-control"
-                                    placeholder="Masukkan usia"
-                                    min="1"
-                                    max="120"
-                                    value="{{ old('usia', $profil->usia ?? '') }}"
-                                    required
-                                >
-
-                                <div class="input-group-append">
-
-                                    <span class="input-group-text">
-                                        Tahun
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- JENIS KELAMIN --}}
-                        <div class="form-group">
-
-                            <label
-                                for="jenis_kelamin"
-                                class="font-weight-bold"
-                            >
-                                Jenis Kelamin
+                            <label class="gender-option">
+                                <input type="radio"
+                                       name="jenis_kelamin"
+                                       value="Perempuan"
+                                       {{ old('jenis_kelamin', $profil->jenis_kelamin ?? '') == 'Perempuan' ? 'checked' : '' }}>
+                                <span class="gender-option-content">
+                                    <i class="fas fa-venus"></i>
+                                    <span>Perempuan</span>
+                                </span>
                             </label>
-
-                            <select
-                                id="jenis_kelamin"
-                                name="jenis_kelamin"
-                                class="form-control"
-                                required
-                            >
-
-                                <option value="">
-                                    -- Pilih Jenis Kelamin --
-                                </option>
-
-                                <option
-                                    value="Laki-laki"
-                                    {{ old('jenis_kelamin', $profil->jenis_kelamin ?? '') == 'Laki-laki' ? 'selected' : '' }}
-                                >
-                                    Laki-laki
-                                </option>
-
-                                <option
-                                    value="Perempuan"
-                                    {{ old('jenis_kelamin', $profil->jenis_kelamin ?? '') == 'Perempuan' ? 'selected' : '' }}
-                                >
-                                    Perempuan
-                                </option>
-
-                            </select>
-
                         </div>
+                    </div>
+                </div>
+            </section>
 
-
-                        <div class="row">
-
-                            {{-- BERAT BADAN --}}
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="berat_badan"
-                                        class="font-weight-bold"
-                                    >
-                                        Berat Badan
-                                    </label>
-
-                                    <div class="input-group">
-
-                                        <input
-                                            type="number"
-                                            id="berat_badan"
-                                            name="berat_badan"
-                                            class="form-control"
-                                            placeholder="Contoh: 55"
-                                            min="1"
-                                            step="0.01"
-                                            value="{{ old('berat_badan', $profil->berat_badan ?? '') }}"
-                                            required
-                                        >
-
-                                        <div class="input-group-append">
-
-                                            <span class="input-group-text">
-                                                kg
-                                            </span>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            {{-- TINGGI BADAN --}}
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="tinggi_badan"
-                                        class="font-weight-bold"
-                                    >
-                                        Tinggi Badan
-                                    </label>
-
-                                    <div class="input-group">
-
-                                        <input
-                                            type="number"
-                                            id="tinggi_badan"
-                                            name="tinggi_badan"
-                                            class="form-control"
-                                            placeholder="Contoh: 165"
-                                            min="1"
-                                            step="0.01"
-                                            value="{{ old('tinggi_badan', $profil->tinggi_badan ?? '') }}"
-                                            required
-                                        >
-
-                                        <div class="input-group-append">
-
-                                            <span class="input-group-text">
-                                                cm
-                                            </span>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- AKTIVITAS --}}
-                        <div class="form-group">
-
-                            <label
-                                for="aktivitas_fisik"
-                                class="font-weight-bold"
-                            >
-                                Tingkat Aktivitas Fisik
-                            </label>
-
-                            <select
-                                id="aktivitas_fisik"
-                                name="aktivitas_fisik"
-                                class="form-control"
-                                required
-                            >
-
-                                <option value="">
-                                    -- Pilih Tingkat Aktivitas --
-                                </option>
-
-                                <option
-                                    value="Sedentary"
-                                    {{ old('aktivitas_fisik', $profil->aktivitas_fisik ?? '') == 'Sedentary' ? 'selected' : '' }}
-                                >
-                                    Sedentary - Sangat sedikit aktivitas
-                                </option>
-
-                                <option
-                                    value="Ringan"
-                                    {{ old('aktivitas_fisik', $profil->aktivitas_fisik ?? '') == 'Ringan' ? 'selected' : '' }}
-                                >
-                                    Ringan - Aktivitas ringan
-                                </option>
-
-                                <option
-                                    value="Sedang"
-                                    {{ old('aktivitas_fisik', $profil->aktivitas_fisik ?? '') == 'Sedang' ? 'selected' : '' }}
-                                >
-                                    Sedang - Aktivitas sedang
-                                </option>
-
-                                <option
-                                    value="Berat"
-                                    {{ old('aktivitas_fisik', $profil->aktivitas_fisik ?? '') == 'Berat' ? 'selected' : '' }}
-                                >
-                                    Berat - Aktivitas berat
-                                </option>
-
-                                <option
-                                    value="Sangat Berat"
-                                    {{ old('aktivitas_fisik', $profil->aktivitas_fisik ?? '') == 'Sangat Berat' ? 'selected' : '' }}
-                                >
-                                    Sangat Berat - Aktivitas sangat berat
-                                </option>
-
-                            </select>
-
-                            <small class="form-text text-muted">
-
-                                Pilih tingkat aktivitas yang paling sesuai
-                                dengan aktivitas sehari-hari kamu.
-
-                            </small>
-
-                        </div>
-
-
-                        <hr>
-
-
-                        {{-- BUTTON --}}
-                        <div class="d-flex justify-content-end">
-
-                            <a
-                                href="{{ route('profil.create') }}"
-                                class="btn btn-light mr-2"
-                            >
-
-                                Batal
-
-                            </a>
-
-
-                            <button
-                                type="submit"
-                                class="btn btn-success"
-                            >
-
-                                <i class="fas fa-save mr-1"></i>
-
-                                Simpan Profil
-
-                            </button>
-
-                        </div>
-
-                    </form>
-
+            <section class="profile-card">
+                <div class="profile-card-heading">
+                    <div class="section-icon">
+                        <i class="fas fa-weight"></i>
+                    </div>
+                    <div>
+                        <h2>Informasi Tubuh</h2>
+                        <p>Data pengukuran tubuh untuk menghitung kebutuhan energi.</p>
+                    </div>
                 </div>
 
-            </div>
+                <div class="profile-form-grid">
+                    <div class="profile-field">
+                        <label for="berat_badan">Berat Badan <span>*</span></label>
+                        <div class="profile-input-wrap">
+                            <i class="fas fa-weight"></i>
+                            <input type="number"
+                                   id="berat_badan"
+                                   name="berat_badan"
+                                   min="1"
+                                   max="500"
+                                   step="0.1"
+                                   value="{{ old('berat_badan', $profil->berat_badan ?? '') }}"
+                                   placeholder="Contoh: 55"
+                                   required>
+                            <span class="input-unit">kg</span>
+                        </div>
+                        <small>Gunakan berat badan terbaru.</small>
+                    </div>
 
-        </div>
+                    <div class="profile-field">
+                        <label for="tinggi_badan">Tinggi Badan <span>*</span></label>
+                        <div class="profile-input-wrap">
+                            <i class="fas fa-ruler-vertical"></i>
+                            <input type="number"
+                                   id="tinggi_badan"
+                                   name="tinggi_badan"
+                                   min="1"
+                                   max="300"
+                                   step="0.1"
+                                   value="{{ old('tinggi_badan', $profil->tinggi_badan ?? '') }}"
+                                   placeholder="Contoh: 160"
+                                   required>
+                            <span class="input-unit">cm</span>
+                        </div>
+                        <small>Masukkan tinggi badan dalam sentimeter.</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-card">
+                <div class="profile-card-heading">
+                    <div class="section-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div>
+                        <h2>Aktivitas Fisik</h2>
+                        <p>Pilih tingkat aktivitas yang paling menggambarkan keseharianmu.</p>
+                    </div>
+                </div>
+
+                @php
+                    $aktivitasTerpilih = old(
+                        'aktivitas_fisik',
+                        $profil->aktivitas_fisik ?? ''
+                    );
+
+                    // Data lama (5 tingkat) dipetakan ke 3 tingkat
+                    // sesuai Tabel 2.3 Faktor Tingkat Aktivitas.
+                    $petaAktivitasLama = [
+                        'Sedentary'    => 'Ringan',
+                        'Sangat Berat' => 'Berat',
+                    ];
+
+                    $aktivitasTerpilih = $petaAktivitasLama[$aktivitasTerpilih]
+                        ?? $aktivitasTerpilih;
+
+                    $daftarAktivitas = [
+                        'Ringan' => [
+                            'icon' => 'fa-walking',
+                            'judul' => 'Ringan (Sedentary)',
+                            'deskripsi' => 'Lebih banyak duduk, aktivitas ringan, atau olahraga 1–3 hari per minggu.'
+                        ],
+                        'Sedang' => [
+                            'icon' => 'fa-biking',
+                            'judul' => 'Sedang',
+                            'deskripsi' => 'Aktivitas cukup aktif atau olahraga 3–5 hari per minggu.'
+                        ],
+                        'Berat' => [
+                            'icon' => 'fa-dumbbell',
+                            'judul' => 'Berat',
+                            'deskripsi' => 'Aktivitas berat, olahraga intensif secara rutin, atau pekerjaan fisik berat.'
+                        ],
+                    ];
+                @endphp
+
+                <div class="activity-options">
+                    @foreach ($daftarAktivitas as $nilai => $aktivitas)
+                        <label class="activity-option">
+                            <input type="radio"
+                                   name="aktivitas_fisik"
+                                   value="{{ $nilai }}"
+                                   {{ $aktivitasTerpilih == $nilai ? 'checked' : '' }}
+                                   required>
+
+                            <span class="activity-option-content">
+                                <span class="activity-icon">
+                                    <i class="fas {{ $aktivitas['icon'] }}"></i>
+                                </span>
+
+                                <span class="activity-description">
+                                    <strong>{{ $aktivitas['judul'] }}</strong>
+                                    <small>{{ $aktivitas['deskripsi'] }}</small>
+                                </span>
+
+                                <span class="activity-check">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+            </section>
+
+            <div class="profile-submit-area">
+                <div class="profile-submit-note">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Pastikan data yang kamu masukkan sudah benar.</span>
+                </div>
+
+                <button type="submit" id="submitProfile" class="profile-submit-button">
+                    <i class="fas fa-save"></i>
+                    <span>Simpan Profil</span>
+                    <i class="fas fa-arrow-right button-arrow"></i>
+                </button>
+            </div>
+        </form>
 
     </div>
-
 </div>
-
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/profil.js') }}" defer></script>
+@endpush

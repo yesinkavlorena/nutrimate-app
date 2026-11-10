@@ -1,0 +1,240 @@
+.nutrimate-navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    padding: 18px 24px;
+    background: #f8faf7;
+    position: relative;
+    z-index: 1000;
+}
+
+/* Item menu */
+.nutrimate-navbar .nav-item {
+    --i: #3d8b63;
+    --j: #8fcf9b;
+
+    position: relative;
+    list-style: none;
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: width 0.5s ease, box-shadow 0.5s ease;
+    cursor: pointer;
+}
+
+.nutrimate-navbar .nav-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 60px;
+    background: linear-gradient(45deg, var(--i), var(--j));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.nutrimate-navbar .nav-item::after {
+    content: "";
+    position: absolute;
+    inset: 10px 0 -5px;
+    border-radius: 60px;
+    background: linear-gradient(45deg, var(--i), var(--j));
+    filter: blur(15px);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.nutrimate-navbar .nav-item:hover,
+.nutrimate-navbar .nav-item:focus-within {
+    width: 180px;
+    box-shadow: none;
+}
+
+.nutrimate-navbar .nav-item:hover::before,
+.nutrimate-navbar .nav-item:focus-within::before {
+    opacity: 1;
+}
+
+.nutrimate-navbar .nav-item:hover::after,
+.nutrimate-navbar .nav-item:focus-within::after {
+    opacity: 0.5;
+}
+
+/* Tautan dan ikon */
+.nutrimate-navbar .nav-link {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
+    color: #777;
+    text-decoration: none;
+    z-index: 1;
+}
+
+.nutrimate-navbar .nav-icon {
+    font-size: 1.6rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nutrimate-navbar .nav-title {
+    position: absolute;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.nutrimate-navbar .nav-item:hover .nav-icon,
+.nutrimate-navbar .nav-item:focus-within .nav-icon {
+    transform: scale(0);
+    opacity: 0;
+}
+
+.nutrimate-navbar .nav-item:hover .nav-title,
+.nutrimate-navbar .nav-item:focus-within .nav-title {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Warna tiap menu */
+.nutrimate-navbar .nav-dashboard {
+    --i: #3d8b63;
+    --j: #8fcf9b;
+}
+
+.nutrimate-navbar .nav-profil {
+    --i: #3977c5;
+    --j: #8cc7f0;
+}
+
+.nutrimate-navbar .nav-preferensi {
+    --i: #d94b69;
+    --j: #f6a6a6;
+}
+
+.nutrimate-navbar .nav-rekomendasi {
+    --i: #db873b;
+    --j: #f6cb79;
+}
+
+.nutrimate-navbar .nav-riwayat {
+    --i: #8064c7;
+    --j: #b9a2f2;
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+    .nutrimate-navbar {
+        gap: 12px;
+        padding: 14px 10px;
+        flex-wrap: wrap;
+    }
+
+    .nutrimate-navbar .nav-item {
+        width: 48px;
+        height: 48px;
+        flex-basis: 48px;
+    }
+
+    .nutrimate-navbar .nav-item:hover,
+    .nutrimate-navbar .nav-item:focus-within {
+        width: 140px;
+        flex-basis: 140px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nutrimate-navbar *,
+    .nutrimate-navbar *::before,
+    .nutrimate-navbar *::after {
+        transition: none !important;
+    }
+}
+
+
+/* Font utama NutriMate */
+body,
+.nutrimate-header,
+.nutrimate-navbar,
+.nutrimate-navbar * {
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Header bagian atas */
+.nutrimate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 5%;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(37, 74, 51, 0.08);
+    position: relative;
+    z-index: 1000;
+}
+
+/* Logo NutriMate */
+.nutrimate-brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nutrimate-brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* Latar navbar menyatu dengan header */
+.nutrimate-header .nutrimate-navbar {
+    flex: 1;
+    background: transparent;
+    padding: 0;
+}
+
+/* Pastikan daftar menu tidak terkena margin default */
+.nutrimate-navbar {
+    margin: 0;
+    list-style: none;
+}
+
+/* Area konten halaman */
+.nutrimate-main {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 800px) {
+    .nutrimate-header {
+        flex-wrap: wrap;
+        padding: 14px 18px;
+        gap: 16px;
+    }
+
+    .nutrimate-header .nutrimate-navbar {
+        order: 3;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+    }
+
+    .nutrimate-main {
+        padding: 16px;
+    }
+}

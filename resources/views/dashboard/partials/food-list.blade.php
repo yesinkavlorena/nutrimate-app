@@ -8,7 +8,7 @@
                 Food List
             </h6>
 
-            <a href="{{ route('informasi.gizi') }}" class="small text-success">
+            <a href="{{ route('informasi.gizi') }}" class="small text-success nm-see-all">
                 See All
             </a>
 
@@ -21,7 +21,7 @@
 
         <div class="col-xl-3 col-md-6 mb-4">
 
-            <div class="card shadow-sm border-0 h-100">
+            <div class="card nm-food shadow-sm border-0 h-100">
 
                 {{-- Gambar makanan --}}
                 @if($item->gambar_makanan)
@@ -51,7 +51,7 @@
                         {{ $item->nama_makanan }}
                     </h6>
 
-                    <small class="text-muted">
+                    <small class="text-muted nm-food-kcal">
                         {{ $item->kalori }} kcal
                     </small>
 

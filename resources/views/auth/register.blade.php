@@ -2,195 +2,214 @@
 
 @section('title', 'Register - NutriMate')
 
-@section('body-class', 'bg-gradient-primary')
+@section('body-class', 'lg-body')
+
+{{-- Gaya dasar dipakai bersama halaman login, register.css hanya tambahan --}}
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('js/register.js') }}" defer></script>
+@endpush
 
 @section('content')
 
-<div class="container">
+<div class="lg-page">
 
-    <!-- Outer Row -->
-    <div class="row justify-content-center">
+    {{-- =========================================================
+         LATAR BELAKANG (gradasi hijau, gelembung, ikon makanan)
+    ========================================================== --}}
+    <div class="lg-bg" id="lgBg" aria-hidden="true">
 
-        <div class="col-xl-6 col-lg-7 col-md-9">
+        <span class="lg-blob b1"></span>
+        <span class="lg-blob b2"></span>
+        <span class="lg-blob b3"></span>
 
-            <div class="card o-hidden border-0 shadow-lg my-5">
+        <span class="lg-float f1"><i class="fas fa-apple-alt"></i></span>
+        <span class="lg-float f2"><i class="fas fa-carrot"></i></span>
+        <span class="lg-float f3"><i class="fas fa-fish"></i></span>
+        <span class="lg-float f4"><i class="fas fa-egg"></i></span>
+        <span class="lg-float f5"><i class="fas fa-lemon"></i></span>
+        <span class="lg-float f6"><i class="fas fa-bread-slice"></i></span>
 
-                <div class="card-body p-0">
-
-                    <!-- Form Register -->
-                    <div class="row">
-
-                        <div class="col-lg-12">
-
-                            <div class="p-5">
-
-                                <!-- ============================= -->
-                                <!-- JUDUL -->
-                                <!-- ============================= -->
-                                <div class="text-center">
-
-                                    <h1 class="h4 text-gray-900 mb-4">
-                                        Create an Account!
-                                    </h1>
-
-                                    <p class="text-muted mb-4">
-                                        Create your NutriMate account
-                                    </p>
-
-                                </div>
+    </div>
 
 
-                                <!-- ============================= -->
-                                <!-- PESAN ERROR -->
-                                <!-- ============================= -->
-                                @if($errors->any())
+    {{-- =========================================================
+         KARTU REGISTER
+    ========================================================== --}}
+    <main class="lg-main">
 
-                                    <div class="alert alert-danger">
+        <div class="lg-card rg-card" id="lgCard">
 
-                                        @foreach($errors->all() as $error)
+            <div class="lg-avatar">
+                <i class="fas fa-user-plus"></i>
+            </div>
 
-                                            <div>
-                                                {{ $error }}
-                                            </div>
+            <h2 class="lg-title">Create an Account!</h2>
 
-                                        @endforeach
-
-                                    </div>
-
-                                @endif
+            <p class="lg-lead">Buat akun NutriMate kamu.</p>
 
 
-                                <!-- ============================= -->
-                                <!-- FORM REGISTER -->
-                                <!-- ============================= -->
-                                <form
-                                    class="user"
-                                    action="{{ route('register.store') }}"
-                                    method="POST"
-                                >
-
-                                    @csrf
-
-
-                                    <!-- ============================= -->
-                                    <!-- NAMA -->
-                                    <!-- ============================= -->
-                                    <div class="form-group">
-
-                                        <input
-                                            type="text"
-                                            class="form-control form-control-user"
-                                            id="name"
-                                            name="name"
-                                            value="{{ old('name') }}"
-                                            placeholder="Full Name"
-                                            autocomplete="name"
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <!-- ============================= -->
-                                    <!-- EMAIL -->
-                                    <!-- ============================= -->
-                                    <div class="form-group">
-
-                                        <input
-                                            type="email"
-                                            class="form-control form-control-user"
-                                            id="email"
-                                            name="email"
-                                            value="{{ old('email') }}"
-                                            placeholder="Email Address"
-                                            autocomplete="email"
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <!-- ============================= -->
-                                    <!-- PASSWORD -->
-                                    <!-- ============================= -->
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-6 mb-3 mb-sm-0">
-
-                                            <input
-                                                type="password"
-                                                class="form-control form-control-user"
-                                                id="password"
-                                                name="password"
-                                                placeholder="Password"
-                                                autocomplete="new-password"
-                                                required
-                                            >
-
-                                        </div>
-
-
-                                        <!-- KONFIRMASI PASSWORD -->
-                                        <div class="col-sm-6">
-
-                                            <input
-                                                type="password"
-                                                class="form-control form-control-user"
-                                                id="password_confirmation"
-                                                name="password_confirmation"
-                                                placeholder="Repeat Password"
-                                                autocomplete="new-password"
-                                                required
-                                            >
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <!-- ============================= -->
-                                    <!-- TOMBOL REGISTER -->
-                                    <!-- ============================= -->
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary btn-user btn-block"
-                                    >
-                                        Register Account
-                                    </button>
-
-                                </form>
-
-
-                                <hr>
-
-
-                                <!-- ============================= -->
-                                <!-- LINK LOGIN -->
-                                <!-- ============================= -->
-                                <div class="text-center">
-
-                                    <a
-                                        class="small"
-                                        href="{{ route('login') }}"
-                                    >
-                                        Already have an account? Login!
-                                    </a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
+            {{-- Error --}}
+            @if($errors->any())
+                <div class="lg-alert err" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="lg-alert-list">
+                        @foreach($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
                     </div>
+                </div>
+            @endif
+
+
+            <!-- Form Register -->
+            <form action="{{ route('register.store') }}" method="POST" id="lgForm">
+
+                @csrf
+
+                <!-- Nama -->
+                <div class="lg-field @error('name') has-error @enderror">
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ old('name') }}"
+                        placeholder=" "
+                        required
+                        autocomplete="name"
+                        autofocus
+                    >
+
+                    <label for="name">Full Name</label>
+
+                    <i class="fas fa-user lg-ico"></i>
 
                 </div>
 
-            </div>
+
+                <!-- Email -->
+                <div class="lg-field @error('email') has-error @enderror">
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        placeholder=" "
+                        required
+                        autocomplete="email"
+                    >
+
+                    <label for="email">Email Address</label>
+
+                    <i class="fas fa-envelope lg-ico"></i>
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="lg-field @error('password') has-error @enderror">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder=" "
+                        required
+                        autocomplete="new-password"
+                    >
+
+                    <label for="password">Password</label>
+
+                    <i class="fas fa-lock lg-ico"></i>
+
+                    <button type="button"
+                            class="lg-eye"
+                            data-target="password"
+                            aria-label="Tampilkan password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+
+                </div>
+
+                <!-- Kekuatan password -->
+                <div class="rg-meter" id="rgMeter" data-level="0" hidden>
+                    <div class="rg-bars"><span></span><span></span><span></span><span></span></div>
+                    <small class="rg-meter-text" id="rgMeterText"></small>
+                </div>
+
+
+                <!-- Konfirmasi Password -->
+                <div class="lg-field">
+
+                    <input
+                        type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        placeholder=" "
+                        required
+                        autocomplete="new-password"
+                    >
+
+                    <label for="password_confirmation">Repeat Password</label>
+
+                    <i class="fas fa-shield-alt lg-ico"></i>
+
+                    <button type="button"
+                            class="lg-eye"
+                            data-target="password_confirmation"
+                            aria-label="Tampilkan password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+
+                </div>
+
+                <div class="rg-match" id="rgMatch" hidden></div>
+
+
+                <div class="lg-caps" id="lgCaps" hidden>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Caps Lock sedang aktif
+                </div>
+
+
+                <!-- Register Button -->
+                <button type="submit" class="lg-btn rg-submit" id="lgSubmit">
+
+                    <span class="lg-btn-label">
+                        <i class="fas fa-user-plus"></i>
+                        Register Account
+                    </span>
+
+                    <span class="lg-btn-wait" hidden>
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Memproses...
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- Login -->
+            <p class="lg-foot">
+                <a class="lg-link" href="{{ route('login') }}">
+                    Already have an account? Login!
+                </a>
+            </p>
+
+            <p class="lg-copy">
+                &copy; NutriMate {{ date('Y') }}
+            </p>
 
         </div>
 
-    </div>
+    </main>
 
 </div>
 

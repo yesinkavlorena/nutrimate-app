@@ -1,0 +1,754 @@
+/* =========================================================
+       NutriMate - Rekomendasi Makanan
+       Satu gaya dengan dashboard, informasi gizi, dan profil.
+    ========================================================= */
+
+    .rk-page {
+        --rk-green: #1cc88a;
+        --rk-green-d: #13a46f;
+        --rk-ink: #2e3b34;
+        --rk-muted: #7d8984;
+        --rk-line: #e4ede8;
+        --c-protein: #5a67d8;
+        --c-lemak: #e9b020;
+        --c-karbo: #2bb5c9;
+    }
+
+    .rk-page [hidden] { display: none !important; }
+
+    .rk-page button:focus-visible,
+    .rk-page summary:focus-visible {
+        outline: 3px solid rgba(28, 200, 138, .45);
+        outline-offset: 2px;
+    }
+
+    /* warna tiap waktu makan (sama dengan dashboard) */
+    .rk-page [data-meal="sarapan"] { --ac: #f5a623; --ac-d: #d98a0b; --ac-soft: rgba(245,166,35,.15); --ac-glow: rgba(245,166,35,.35); }
+    .rk-page [data-meal="siang"]   { --ac: #1cc88a; --ac-d: #13a46f; --ac-soft: rgba(28,200,138,.13);  --ac-glow: rgba(28,200,138,.32); }
+    .rk-page [data-meal="malam"]   { --ac: #5a67d8; --ac-d: #434fb5; --ac-soft: rgba(90,103,216,.14);  --ac-glow: rgba(90,103,216,.35); }
+    .rk-page [data-meal="camilan"] { --ac: #f0627a; --ac-d: #d1435c; --ac-soft: rgba(240,98,122,.14);  --ac-glow: rgba(240,98,122,.35); }
+
+
+    /* ---------- Header ---------- */
+    .rk-hero {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px 28px;
+        margin-bottom: 1.5rem;
+        padding: 1.6rem 1.9rem;
+        border: 1px solid var(--rk-line);
+        border-radius: 22px;
+        background: linear-gradient(135deg, #eafaf3 0%, #f7fffb 60%, #ffffff 100%);
+        box-shadow: 0 6px 24px rgba(30, 80, 55, .07);
+        transition: box-shadow .3s ease;
+    }
+    .rk-hero:hover { box-shadow: 0 14px 34px rgba(30, 80, 55, .14); }
+    .rk-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(320px circle at var(--mx, 90%) var(--my, 10%), rgba(28,200,138,.24), transparent 70%);
+    }
+    .rk-hero > * { position: relative; }
+
+    .rk-hero-title {
+        margin: 0 0 .3rem;
+        font-size: clamp(1.5rem, 3vw, 2.1rem);
+        font-weight: 800;
+        background: linear-gradient(90deg, #1f6f50, var(--rk-green));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .rk-hero-sub { max-width: 520px; margin: 0; color: var(--rk-muted); }
+
+    .rk-daily {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 20px;
+        border: 1px solid var(--rk-line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, .85);
+        box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+        transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+    }
+    .rk-daily:hover { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(28,200,138,.25); }
+    .rk-daily-icon {
+        width: 52px; height: 52px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        font-size: 1.35rem;
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--rk-green-d));
+        box-shadow: 0 8px 18px rgba(28, 200, 138, .35);
+        transition: transform .5s cubic-bezier(.22,1,.36,1);
+    }
+    .rk-daily:hover .rk-daily-icon { transform: rotate(-10deg) scale(1.1); }
+    .rk-daily-label { font-size: .78rem; font-weight: 800; letter-spacing: .08em; color: var(--rk-green-d); }
+    .rk-daily-value { font-size: 1.6rem; font-weight: 800; line-height: 1.2; color: var(--rk-ink); }
+    .rk-daily-value small { font-size: .85rem; font-weight: 600; color: var(--rk-muted); }
+    .rk-daily-note { color: var(--rk-muted); }
+
+
+    /* ---------- Panel ---------- */
+    .rk-panel {
+        position: relative;
+        display: block;
+        border: 1px solid var(--rk-line);
+        border-radius: 22px;
+        background: linear-gradient(135deg, #f3fcf8 0%, #ffffff 55%);
+        box-shadow: 0 6px 24px rgba(30, 80, 55, .07);
+        transition: box-shadow .3s ease;
+    }
+    .rk-panel:hover { box-shadow: 0 14px 34px rgba(30, 80, 55, .14); }
+    .rk-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: radial-gradient(320px circle at var(--mx, 92%) var(--my, 8%), rgba(28,200,138,.2), transparent 70%);
+    }
+    .rk-panel > * { position: relative; z-index: 1; }
+
+    .rk-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 1rem 1.4rem;
+        border-bottom: 1px solid var(--rk-line);
+        list-style: none;
+    }
+    .rk-panel-head::-webkit-details-marker { display: none; }
+    .rk-panel-title { margin: 0; font-size: 1rem; font-weight: 800; color: var(--rk-green-d); }
+    .rk-panel-title i { margin-right: .5rem; }
+    .rk-panel-body { padding: 1.4rem; }
+    .rk-lead { margin-bottom: 1.2rem; color: var(--rk-muted); }
+
+    /* panel yang bisa dilipat */
+    .rk-targets > summary { cursor: pointer; }
+    .rk-targets:not([open]) > summary { border-bottom-color: transparent; }
+    .rk-how-arrow { color: var(--rk-green-d); transition: transform .3s ease; }
+    .rk-targets[open] > summary .rk-how-arrow,
+    .rk-how[open] > summary .rk-how-arrow { transform: rotate(180deg); }
+
+
+    /* ---------- Pilihan waktu makan ---------- */
+    .meal-option {
+        position: relative;
+        display: block;
+        margin: 0;
+        cursor: pointer;
+    }
+    .meal-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
+    .meal-content {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 94px;
+        padding: 16px;
+        background: #fff;
+        border: 1.5px solid var(--rk-line);
+        border-left: 5px solid var(--ac);
+        border-radius: 16px;
+        box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+        transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .35s ease, background .35s ease;
+    }
+    .meal-option:hover .meal-content {
+        transform: translateY(-6px);
+        border-color: var(--ac);
+        box-shadow: 0 16px 30px var(--ac-glow);
+    }
+    .meal-option input:checked + .meal-content {
+        border-color: var(--ac);
+        background: linear-gradient(135deg, var(--ac-soft), #ffffff 80%);
+        box-shadow: 0 10px 24px var(--ac-glow);
+    }
+    .meal-option input:focus-visible + .meal-content {
+        outline: 3px solid var(--ac-glow);
+        outline-offset: 2px;
+    }
+
+    /* kilau menyapu */
+    .meal-content::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -120%;
+        width: 55%; height: 100%;
+        background: linear-gradient(105deg, transparent, rgba(255,255,255,.7), transparent);
+        transform: skewX(-18deg);
+        pointer-events: none;
+    }
+    .meal-option:hover .meal-content::before { animation: rkSweep .9s ease; }
+    @keyframes rkSweep { to { left: 140%; } }
+
+    .meal-icon {
+        flex: none;
+        width: 50px; height: 50px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        font-size: 1.25rem;
+        color: var(--ac);
+        background: var(--ac-soft);
+        transition: transform .5s cubic-bezier(.22,1,.36,1), background .3s ease, color .3s ease, box-shadow .3s ease;
+    }
+    .meal-option:hover .meal-icon,
+    .meal-option input:checked + .meal-content .meal-icon {
+        color: #fff;
+        background: linear-gradient(135deg, var(--ac), var(--ac-d));
+        box-shadow: 0 8px 18px var(--ac-glow);
+    }
+    .meal-option:hover .meal-icon { transform: rotate(-10deg) scale(1.12); }
+
+    .meal-text { min-width: 0; line-height: 1.35; }
+    .meal-title { font-weight: 800; color: var(--rk-ink); }
+    .meal-kcal { margin-top: 2px; font-size: .85rem; font-weight: 800; color: var(--ac-d); }
+
+    .meal-now {
+        display: none;
+        margin-left: 6px;
+        padding: 1px 8px;
+        border-radius: 999px;
+        font-size: .68rem;
+        font-weight: 700;
+        color: var(--ac-d);
+        background: var(--ac-soft);
+        vertical-align: middle;
+    }
+    .meal-option.is-now .meal-now { display: inline-block; }
+
+    .meal-check {
+        position: absolute;
+        top: 10px; right: 10px;
+        width: 24px; height: 24px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        font-size: .7rem;
+        color: #fff;
+        background: var(--ac);
+        transform: scale(0);
+        transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .meal-option input:checked + .meal-content .meal-check { transform: scale(1); }
+
+    /* pesan bila belum memilih */
+    .rk-hint {
+        margin-top: .5rem;
+        padding: .7rem 1rem;
+        border-left: 5px solid #e9b020;
+        border-radius: 12px;
+        background: #fff8e1;
+        color: #8a6a06;
+        font-weight: 600;
+        animation: rkSlide .4s ease;
+    }
+    .rk-hint i { margin-right: .4rem; }
+    @keyframes rkSlide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+    .meal-options-shake { animation: rkShake .45s ease; }
+    @keyframes rkShake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-8px); }
+        40% { transform: translateX(7px); }
+        60% { transform: translateX(-5px); }
+        80% { transform: translateX(3px); }
+    }
+
+
+    /* ---------- Tombol ---------- */
+    .rk-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 220px;
+        padding: .8rem 1.8rem;
+        border: 0;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2fd9a0, var(--rk-green-d));
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(28, 200, 138, .32);
+        transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .rk-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(28,200,138,.42); filter: brightness(1.05); }
+    .rk-btn:active { transform: translateY(0); }
+    .rk-btn i { margin-right: .5rem; }
+    .rk-btn[disabled] { cursor: progress; filter: saturate(.7); transform: none; }
+
+    .rk-btn-outline {
+        min-width: 0;
+        padding: .55rem 1.1rem;
+        border: 1.5px solid var(--rk-green);
+        background: #fff;
+        color: var(--rk-green-d);
+        box-shadow: none;
+    }
+    .rk-btn-outline:hover { color: #fff; background: linear-gradient(135deg, #2fd9a0, var(--rk-green-d)); }
+
+
+    /* ---------- Hasil: header ---------- */
+    .recommendation-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 1rem;
+        padding: 1.2rem 1.4rem;
+        border: 1px solid #d9f5e7;
+        border-radius: 18px;
+        background: #f8fffb;
+    }
+    .rk-eyebrow { margin-bottom: .2rem; font-size: .8rem; font-weight: 700; color: var(--rk-green-d); }
+    .rk-result-title { margin: 0 0 .2rem; font-size: 1.5rem; font-weight: 800; color: var(--rk-ink); }
+    .rk-result-target { margin: 0 0 .6rem; color: var(--rk-muted); }
+    .rk-result-target strong { color: var(--rk-green-d); }
+    .rk-range {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .3rem .8rem;
+        border-radius: 999px;
+        background: rgba(28, 200, 138, .14);
+        color: var(--rk-green-d);
+        font-size: .82rem;
+        font-weight: 700;
+    }
+    .recommendation-target-icon {
+        flex: none;
+        width: 58px; height: 58px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--rk-green-d));
+        box-shadow: 0 8px 18px rgba(28, 200, 138, .35);
+        transition: transform .5s cubic-bezier(.22,1,.36,1);
+    }
+    .recommendation-header:hover .recommendation-target-icon { transform: rotate(-12deg) scale(1.1); }
+
+    /* penjelasan cara kerja (dilipat) */
+    .rk-how {
+        margin-bottom: 1.4rem;
+        border: 1px solid var(--rk-line);
+        border-radius: 16px;
+        background: #fff;
+        transition: box-shadow .3s ease, border-color .3s ease;
+    }
+    .rk-how:hover { border-color: var(--rk-green); box-shadow: 0 8px 20px rgba(28,200,138,.14); }
+    .rk-how > summary {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: .8rem 1rem;
+        list-style: none;
+        cursor: pointer;
+        font-weight: 800;
+        color: var(--rk-ink);
+    }
+    .rk-how > summary::-webkit-details-marker { display: none; }
+    .rk-how > summary small { display: block; font-weight: 500; color: var(--rk-muted); }
+    .rk-how > summary .rk-how-arrow { margin-left: auto; }
+    .rk-how-icon {
+        flex: none;
+        width: 38px; height: 38px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        color: var(--rk-green-d);
+        background: rgba(28, 200, 138, .14);
+    }
+    .rk-how-body { padding: 0 1rem 1rem 3.7rem; color: var(--rk-muted); animation: rkSlide .35s ease; }
+
+    /* judul daftar */
+    .rk-list-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 1.2rem;
+    }
+    .rk-list-head h6 { margin: 0 0 .15rem; font-weight: 800; color: var(--rk-ink); }
+    .rk-list-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .rk-save { margin: 0; }
+    .recommendation-count {
+        padding: .4rem .9rem;
+        border-radius: 999px;
+        background: rgba(28, 200, 138, .14);
+        color: var(--rk-green-d);
+        font-size: .82rem;
+        font-weight: 700;
+    }
+    .recommendation-count i { margin-right: .3rem; }
+
+
+    /* ---------- Kartu makanan ---------- */
+    .recommendation-food-card {
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid var(--rk-line);
+        border-radius: 18px;
+        box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+        animation: rkIn .6s cubic-bezier(.22,1,.36,1) both;
+        animation-delay: calc(var(--i, 0) * 90ms);
+        transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .35s ease;
+    }
+    @keyframes rkIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+    .recommendation-food-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--rk-green);
+        box-shadow: 0 18px 34px rgba(28, 200, 138, .28);
+    }
+    .recommendation-food-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: -120%;
+        width: 55%; height: 100%;
+        background: linear-gradient(105deg, transparent, rgba(255,255,255,.55), transparent);
+        transform: skewX(-18deg);
+        pointer-events: none;
+        z-index: 3;
+    }
+    .recommendation-food-card:hover::before { animation: rkSweep .9s ease; }
+    .recommendation-food-card::after {
+        content: "";
+        position: absolute;
+        left: 0; bottom: 0;
+        width: 0; height: 4px;
+        border-radius: 0 4px 4px 0;
+        background: linear-gradient(90deg, var(--rk-green-d), #4ee3b0);
+        transition: width .8s cubic-bezier(.22,1,.36,1);
+        z-index: 3;
+    }
+    .recommendation-food-card:hover::after { width: 100%; }
+    @media (hover: none) { .recommendation-food-card::after { width: 100%; } }
+
+    .recommendation-food-body { padding: 20px; }
+
+    .recommendation-number {
+        position: absolute;
+        top: 14px; right: 14px;
+        z-index: 2;
+        width: 34px; height: 34px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--rk-green-d));
+        box-shadow: 0 6px 14px rgba(28, 200, 138, .35);
+        transition: transform .5s cubic-bezier(.22,1,.36,1);
+    }
+    .recommendation-food-card:hover .recommendation-number { transform: rotate(360deg) scale(1.12); }
+
+    .rk-best {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        margin-bottom: .6rem;
+        padding: .2rem .7rem;
+        border-radius: 999px;
+        background: rgba(233, 176, 32, .2);
+        color: #a87d06;
+        font-size: .75rem;
+        font-weight: 800;
+    }
+
+    .rk-food-name {
+        margin: 0 2.4rem .6rem 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--rk-ink);
+        transition: color .3s ease, transform .3s ease;
+    }
+    .recommendation-food-card:hover .rk-food-name { color: var(--rk-green-d); transform: translateX(4px); }
+
+    .food-calorie {
+        display: inline-block;
+        margin-bottom: .9rem;
+        padding: .35rem .8rem;
+        border-radius: 999px;
+        background: rgba(28, 200, 138, .13);
+        color: var(--rk-green-d);
+        font-size: .9rem;
+        font-weight: 800;
+        transition: background .3s ease, color .3s ease;
+    }
+    .food-calorie i { margin-right: .3rem; }
+    .recommendation-food-card:hover .food-calorie {
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--rk-green-d));
+    }
+
+    /* posisi kalori dalam rentang target */
+    .rk-gauge { margin-bottom: 1rem; }
+    .rk-gauge-label { margin-bottom: .45rem; font-size: .75rem; color: var(--rk-muted); }
+    .rk-gauge-track {
+        position: relative;
+        height: 8px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #e3eee8, #bdf0d9 35%, #bdf0d9 65%, #e3eee8);
+    }
+    .rk-gauge-target {
+        position: absolute;
+        top: -4px;
+        left: var(--pt, 50%);
+        width: 2px; height: 16px;
+        border-radius: 2px;
+        background: var(--rk-ink);
+        opacity: .5;
+        transform: translateX(-50%);
+    }
+    .rk-gauge-dot {
+        position: absolute;
+        top: 50%;
+        left: var(--pt, 50%);
+        width: 16px; height: 16px;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        background: var(--rk-green-d);
+        box-shadow: 0 2px 8px rgba(19, 164, 111, .5);
+        transform: translate(-50%, -50%);
+        transition: left 1.1s cubic-bezier(.22,1,.36,1) .25s;
+    }
+    .rk-ready .rk-gauge-dot { left: var(--pos, 50%); }
+    .rk-gauge-scale { display: flex; justify-content: space-between; margin-top: .35rem; font-size: .7rem; color: var(--rk-muted); }
+
+    /* komposisi makro */
+    .rk-macro {
+        display: flex;
+        height: 8px;
+        margin-bottom: .7rem;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #edf3ef;
+    }
+    .rk-macro i {
+        display: block;
+        width: 0;
+        height: 100%;
+        transition: width 1s cubic-bezier(.22,1,.36,1) .3s;
+    }
+    .rk-ready .rk-macro i { width: var(--w, 0%); }
+    .m-p { background: var(--c-protein); }
+    .m-l { background: var(--c-lemak); }
+    .m-k { background: var(--c-karbo); }
+
+    .nutrition-info { padding: 6px 0 4px; border-top: 1px solid var(--rk-line); }
+    .nutrition-item { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; font-size: .85rem; }
+    .nutrition-item span { color: var(--rk-muted); }
+    .nutrition-item strong { color: var(--rk-ink); font-weight: 800; }
+    .rk-dot { display: inline-block; width: 9px; height: 9px; margin-right: .4rem; border-radius: 50%; }
+
+    .food-distance {
+        margin-top: .8rem;
+        padding: .55rem .8rem;
+        border-radius: 12px;
+        background: #f3f8f5;
+        color: var(--rk-muted);
+        font-size: .8rem;
+        transition: background .3s ease;
+    }
+    .food-distance i { margin-right: .3rem; }
+    .food-distance strong { color: var(--rk-ink); }
+    .recommendation-food-card:hover .food-distance { background: rgba(28, 200, 138, .12); }
+    .rk-dir { color: var(--rk-muted); }
+
+
+    /* ---------- Kosong, catatan ---------- */
+    .rk-empty { padding: 2.5rem 1rem; text-align: center; }
+    .rk-empty h5 { font-weight: 800; color: var(--rk-ink); }
+    .rk-empty p { margin: 0; color: var(--rk-muted); }
+    .recommendation-empty-icon {
+        width: 76px; height: 76px;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        font-size: 1.9rem;
+        color: var(--rk-green-d);
+        background: rgba(28, 200, 138, .13);
+    }
+
+    .rk-note {
+        display: flex;
+        align-items: flex-start;
+        gap: .6rem;
+        margin-top: .4rem;
+        padding: .8rem 1rem;
+        border: 1px solid var(--rk-line);
+        border-left: 5px solid var(--rk-green);
+        border-radius: 14px;
+        background: linear-gradient(90deg, #eefbf5, #fff);
+        color: var(--rk-muted);
+    }
+    .rk-note i { margin-top: .15rem; color: var(--rk-green); }
+    .rk-note-plain { margin-top: .6rem; }
+
+
+    /* ---------- Kartu target per waktu makan ---------- */
+    .meal-target-card {
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        padding: 18px;
+        border: 1px solid var(--rk-line);
+        border-left: 5px solid var(--ac);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+        transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .35s ease;
+    }
+    .meal-target-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--ac);
+        box-shadow: 0 16px 30px var(--ac-glow);
+    }
+    .meal-target-card::after {
+        content: "";
+        position: absolute;
+        left: 0; bottom: 0;
+        width: 0; height: 4px;
+        border-radius: 0 4px 4px 0;
+        background: linear-gradient(90deg, var(--ac-d), var(--ac));
+        transition: width .8s cubic-bezier(.22,1,.36,1);
+    }
+    .meal-target-card:hover::after { width: 100%; }
+    .meal-target-icon {
+        width: 48px; height: 48px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 10px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        color: var(--ac);
+        background: var(--ac-soft);
+        transition: transform .5s cubic-bezier(.22,1,.36,1), background .3s ease, color .3s ease;
+    }
+    .meal-target-card:hover .meal-target-icon {
+        color: #fff;
+        background: linear-gradient(135deg, var(--ac), var(--ac-d));
+        transform: rotate(-10deg) scale(1.12);
+    }
+    .meal-target-label { font-size: .8rem; font-weight: 800; color: var(--ac-d); }
+    .meal-target-value { margin-bottom: .2rem; font-size: 1.35rem; font-weight: 800; color: var(--rk-ink); transition: color .3s ease; }
+    .meal-target-card:hover .meal-target-value { color: var(--ac-d); }
+
+
+    /* ---------- Pemuat (skeleton) ---------- */
+    #hasil-rekomendasi { scroll-margin-top: 16px; }
+    #hasil-rekomendasi.is-loading { min-height: 380px; }
+    .rk-loading {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        padding: 1.4rem;
+        border-radius: inherit;
+        background: rgba(255, 255, 255, .96);
+    }
+    .rk-loading-title { margin-bottom: 1rem; font-weight: 800; color: var(--rk-green-d); }
+    .rk-loading-title i { margin-right: .5rem; }
+    .rk-skel {
+        height: 260px;
+        border-radius: 18px;
+        background: linear-gradient(100deg, #edf3ef 30%, #f8fcfa 50%, #edf3ef 70%);
+        background-size: 200% 100%;
+        animation: rkShimmer 1.3s linear infinite;
+    }
+    @keyframes rkShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+
+    /* ---------- Layar kecil ---------- */
+    @media (max-width: 767.98px) {
+        .rk-hero { padding: 1.3rem 1.2rem; }
+        .rk-daily { width: 100%; }
+        .rk-how-body { padding-left: 1rem; }
+        .recommendation-header { padding: 1rem; }
+        .rk-btn { width: 100%; }
+        .rk-list-actions { width: 100%; justify-content: space-between; }
+        .rk-btn-outline { width: auto; }
+    }
+
+
+    /* ---------- Hormati pengaturan "kurangi animasi" ---------- */
+    @media (prefers-reduced-motion: reduce) {
+        .rk-page *, .rk-page *::before, .rk-page *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+        .rk-ready .rk-gauge-dot, .rk-gauge-dot { left: var(--pos, 50%); }
+        .rk-macro i { width: var(--w, 0%); }
+    }
+
+    /* PESAN SETELAH MENYIMPAN RIWAYAT */
+
+.rk-flash {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-height: 120px;
+    margin-bottom: 20px;
+    padding: 13px 18px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    animation:
+        rkFlashIn .4s ease both,
+        rkFlashOut .5s ease 5s forwards;
+}
+
+.rk-flash > i {
+    flex-shrink: 0;
+    font-size: 18px;
+}
+
+.rk-flash-success {
+    border-color: #bfe9d6;
+    background: #e9f9f2;
+    color: #146c4a;
+}
+
+.rk-flash-info {
+    border-color: #f3e0b0;
+    background: #fff8e6;
+    color: #8a6410;
+}
+
+.rk-flash-error {
+    border-color: #f3cece;
+    background: #fff4f4;
+    color: #a52828;
+}
+
+@keyframes rkFlashIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes rkFlashOut {
+    to {
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-width: 0;
+        opacity: 0;
+    }
+}

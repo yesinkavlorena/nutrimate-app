@@ -57,7 +57,7 @@
     {{-- Rekomendasi --}}
     <li class="nav-item {{ request()->routeIs('rekomendasi.*') ? 'active' : '' }}">
 
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('rekomendasi.index') }}">
 
             <i class="fas fa-fw fa-utensils"></i>
 
@@ -71,14 +71,11 @@
     {{-- Riwayat --}}
     <li class="nav-item {{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
 
-        <a class="nav-link" href="#">
-
-            <i class="fas fa-fw fa-history"></i>
-
-            <span>Riwayat</span>
-
+        <a class="nav-link {{ request()->routeIs('riwayat.*') ? 'active' : '' }}"
+            href="{{ route('riwayat.index') }}">
+                <i class="fas fa-fw fa-history"></i>
+                <span>Riwayat</span>
         </a>
-
     </li>
 
 

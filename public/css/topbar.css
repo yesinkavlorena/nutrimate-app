@@ -1,0 +1,281 @@
+/* =========================================================
+       NutriMate - Topbar
+       Satu gaya dengan dashboard dan halaman lain.
+    ========================================================= */
+
+    .tb {
+        --tb-green: #1cc88a;
+        --tb-green-d: #13a46f;
+        --tb-ink: #2e3b34;
+        --tb-muted: #7d8984;
+        --tb-line: #e4ede8;
+
+        position: relative;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 1.25rem;
+        padding: .7rem 1.1rem;
+        border: 1px solid var(--tb-line);
+        border-radius: 20px;
+        background: linear-gradient(135deg, #f3fcf8 0%, #ffffff 60%);
+        box-shadow: 0 6px 24px rgba(30, 80, 55, .07);
+        transition: box-shadow .3s ease;
+    }
+    .tb:hover { box-shadow: 0 14px 34px rgba(30, 80, 55, .12); }
+
+    .tb button:focus-visible,
+    .tb a:focus-visible {
+        outline: 3px solid rgba(28, 200, 138, .45);
+        outline-offset: 2px;
+    }
+
+
+    /* ---------- Tombol menu (HP) ---------- */
+    .tb-burger {
+        flex: none;
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(28, 200, 138, .14);
+        color: var(--tb-green-d);
+        cursor: pointer;
+        transition: background .25s ease, color .25s ease, transform .3s ease, box-shadow .25s ease;
+    }
+    .tb-burger:hover {
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--tb-green-d));
+        transform: rotate(-8deg) scale(1.06);
+        box-shadow: 0 8px 18px rgba(28, 200, 138, .35);
+    }
+
+
+    /* ---------- Judul halaman ---------- */
+    .tb-left {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-left: 14px;
+        border-left: 4px solid var(--tb-green);
+        border-radius: 2px;
+    }
+    .tb-hello {
+        font-size: .78rem;
+        line-height: 1.2;
+        color: var(--tb-muted);
+    }
+    .tb-title {
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 1.2rem;
+        font-weight: 800;
+        line-height: 1.3;
+        color: var(--tb-ink);
+        background: linear-gradient(90deg, #1f6f50, var(--tb-green));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+
+    /* ---------- Kanan ---------- */
+    .tb-right {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-left: auto;
+    }
+    .tb-date {
+        align-items: center;
+        gap: .45rem;
+        padding: .4rem .9rem;
+        border-radius: 999px;
+        background: rgba(28, 200, 138, .12);
+        color: var(--tb-green-d);
+        font-size: .82rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .tb-divider {
+        width: 1px;
+        height: 30px;
+        background: var(--tb-line);
+    }
+
+
+    /* ---------- Pengguna ---------- */
+    .tb-user { position: relative; }
+
+    .tb-user-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 12px 5px 16px;
+        border: 1px solid var(--tb-line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--tb-ink);
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+        transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease, border-color .3s ease;
+    }
+    .tb-user-btn::after { display: none; }
+    .tb-user-btn:hover,
+    .tb-user-btn[aria-expanded="true"] {
+        transform: translateY(-2px);
+        border-color: var(--tb-green);
+        box-shadow: 0 10px 22px rgba(28, 200, 138, .26);
+    }
+    .tb-user-name {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: .88rem;
+    }
+    .tb-chev {
+        font-size: .7rem;
+        color: var(--tb-green-d);
+        transition: transform .3s ease;
+    }
+    .tb-user-btn[aria-expanded="true"] .tb-chev { transform: rotate(180deg); }
+
+    .tb-avatar {
+        position: relative;
+        flex: none;
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: .95rem;
+        color: #fff;
+        background: linear-gradient(135deg, #36d6a0, var(--tb-green-d));
+        box-shadow: 0 6px 14px rgba(28, 200, 138, .35);
+        transition: transform .5s cubic-bezier(.22,1,.36,1);
+    }
+    .tb-user-btn:hover .tb-avatar { transform: rotate(-10deg) scale(1.08); }
+    .tb-avatar-lg { width: 48px; height: 48px; font-size: 1.15rem; }
+
+
+    /* ---------- Menu pengguna ---------- */
+    .tb-menu {
+        min-width: 270px;
+        margin-top: 10px !important;
+        padding: 0;
+        border: 1px solid var(--tb-line);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 18px 40px rgba(30, 80, 55, .18);
+        overflow: hidden;
+    }
+    .tb-menu-inner {
+        padding: 8px;
+        transform-origin: top right;
+        animation: tbPop .28s cubic-bezier(.22,1,.36,1);
+    }
+    @keyframes tbPop {
+        from { opacity: 0; transform: translateY(-8px) scale(.96); }
+        to   { opacity: 1; transform: none; }
+    }
+
+    .tb-menu-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+        padding: 12px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #eafaf3 0%, #f7fffb 70%, #ffffff 100%);
+    }
+    .tb-menu-who { min-width: 0; line-height: 1.3; }
+    .tb-menu-who strong,
+    .tb-menu-who small {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .tb-menu-who strong { color: var(--tb-ink); font-weight: 800; }
+    .tb-menu-who small { color: var(--tb-muted); }
+
+    .tb-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: .6rem .75rem;
+        border: 0;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--tb-ink);
+        font-weight: 700;
+        text-align: left;
+        cursor: pointer;
+        transition: background .25s ease, color .25s ease, transform .25s ease;
+    }
+    .tb-item-icon {
+        flex: none;
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: .85rem;
+        color: var(--tb-green-d);
+        background: rgba(28, 200, 138, .13);
+        transition: transform .4s cubic-bezier(.22,1,.36,1), background .25s ease, color .25s ease, box-shadow .25s ease;
+    }
+    .tb-item:hover,
+    .tb-item:focus {
+        color: var(--tb-green-d);
+        background: rgba(28, 200, 138, .1);
+        transform: translateX(4px);
+    }
+    .tb-item:hover .tb-item-icon {
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--tb-green-d));
+        box-shadow: 0 6px 14px rgba(28, 200, 138, .35);
+        transform: rotate(-10deg) scale(1.1);
+    }
+
+    .tb-item-danger .tb-item-icon { color: #d9483b; background: rgba(231, 74, 59, .12); }
+    .tb-item-danger:hover,
+    .tb-item-danger:focus { color: #d9483b; background: rgba(231, 74, 59, .09); }
+    .tb-item-danger:hover .tb-item-icon {
+        background: linear-gradient(135deg, #f0705f, #d9483b);
+        box-shadow: 0 6px 14px rgba(231, 74, 59, .35);
+    }
+
+    .tb-sep { height: 1px; margin: 6px 4px; background: var(--tb-line); }
+
+
+    /* ---------- Layar kecil ---------- */
+    @media (max-width: 767.98px) {
+        .tb { gap: 10px; padding: .6rem .8rem; border-radius: 16px; }
+        .tb-hello { display: none; }
+        .tb-title { font-size: 1.02rem; }
+        .tb-left { padding-left: 10px; }
+        .tb-user-name,
+        .tb-chev { display: none; }
+        .tb-user-btn { padding: 4px; }
+    }
+
+    /* ---------- Hormati pengaturan "kurangi animasi" ---------- */
+    @media (prefers-reduced-motion: reduce) {
+        .tb *, .tb *::before, .tb *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+    }

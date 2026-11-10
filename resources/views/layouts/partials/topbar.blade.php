@@ -1,92 +1,141 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<link rel="stylesheet"
+      href="{{ asset('css/topbar.css') }}?v={{ @filemtime(public_path('css/topbar.css')) }}">
 
-    {{-- Sidebar Toggle --}}
-    <button id="sidebarToggleTop"
-            class="btn btn-link d-md-none rounded-circle mr-3">
+@php
+    $zona   = now()->timezone('Asia/Jakarta');
+    $jam    = $zona->hour;
 
-        <i class="fa fa-bars"></i>
+    $sapaan = $jam < 11 ? 'Selamat Pagi'
+            : ($jam < 15 ? 'Selamat Siang'
+            : ($jam < 18 ? 'Selamat Sore' : 'Selamat Malam'));
 
-    </button>
+    // judul halaman diambil dari @section('title'), tanpa akhiran " - NutriMate"
+    $judulHalaman = trim(\Illuminate\Support\Str::before(
+        \Illuminate\Support\Facades\View::yieldContent('title') ?: 'NutriMate',
+        ' - NutriMate'
+    ));
+
+    $tanggal   = $zona->copy()->locale('id')->translatedFormat('l, d F Y');
+    $namaDepan = explode(' ', trim(Auth::user()->name))[0];
+@endphp
+
+<nav class="tb" aria-label="Bilah atas">
 
 
     {{-- Page Title --}}
-    <div class="d-none d-sm-inline-block">
+    <div class="tb-left">
 
-        <span class="font-weight-bold text-success">
-            Dashboard
-        </span>
+        <div class="tb-hello">
+            {{ $sapaan }}, {{ $namaDepan }}
+        </div>
+
+        <h2 class="tb-title">
+            {{ $judulHalaman }}
+        </h2>
 
     </div>
 
 
     {{-- Right Side --}}
-    <ul class="navbar-nav ml-auto">
+    <div class="tb-right">
 
-        <div class="topbar-divider d-none d-sm-block"></div>
+        <div class="tb-date d-none d-lg-inline-flex">
+
+            <i class="fas fa-calendar-alt"></i>
+
+            {{ $tanggal }}
+
+        </div>
+
+        <div class="tb-divider d-none d-lg-block"></div>
 
 
         {{-- User --}}
-        <li class="nav-item dropdown no-arrow">
+        <div class="dropdown tb-user">
 
-            <a class="nav-link dropdown-toggle"
-               href="#"
-               id="userDropdown"
-               role="button"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
+            <button class="tb-user-btn dropdown-toggle"
+                    type="button"
+                    id="userDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
 
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                <span class="tb-user-name">
 
                     {{ Auth::user()->name }}
 
                 </span>
 
-                <i class="fas fa-user-circle fa-2x text-success"></i>
+                <span class="tb-avatar">
+                    <i class="fas fa-user"></i>
+                </span>
 
-            </a>
+                <i class="fas fa-chevron-down tb-chev"></i>
+
+            </button>
 
 
             {{-- Dropdown --}}
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+            <div class="dropdown-menu dropdown-menu-end tb-menu"
                  aria-labelledby="userDropdown">
 
+                <div class="tb-menu-inner">
 
-                {{-- Profil --}}
-                <a class="dropdown-item"
-                   href="{{ route('profil.create') }}">
+                    <div class="tb-menu-head">
 
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                        <span class="tb-avatar tb-avatar-lg">
+                            <i class="fas fa-user"></i>
+                        </span>
 
-                    Profil
+                        <div class="tb-menu-who">
+                            <strong>{{ Auth::user()->name }}</strong>
+                            <small>{{ Auth::user()->email }}</small>
+                        </div>
 
-                </a>
+                    </div>
 
 
-                <div class="dropdown-divider"></div>
+                    {{-- Profil --}}
+                    <a class="dropdown-item tb-item"
+                       href="{{ route('profil.create') }}">
+
+                        <span class="tb-item-icon">
+                            <i class="fas fa-user"></i>
+                        </span>
+
+                        Profil
+
+                    </a>
 
 
-                {{-- Logout --}}
-                <form action="{{ route('logout') }}"
-                      method="POST">
+                    <div class="tb-sep"></div>
 
-                    @csrf
 
-                    <button type="submit"
-                            class="dropdown-item">
+                    {{-- Logout --}}
+                    <form action="{{ route('logout') }}"
+                          method="POST">
 
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        @csrf
 
-                        Logout
+                        <button type="submit"
+                                class="dropdown-item tb-item tb-item-danger">
 
-                    </button>
+                            <span class="tb-item-icon">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </span>
 
-                </form>
+                            Logout
+
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
 
-        </li>
+        </div>
 
-    </ul>
+    </div>
 
 </nav>

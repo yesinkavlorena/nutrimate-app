@@ -16,4 +16,12 @@
     {{-- Food List --}}
     @include('dashboard.partials.food-list')
 
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    @endpush
+
+    @push('scripts')
+        <script src="{{ asset('js/dashboard.js') }}" defer></script>
+    @endpush
+
 @endsection

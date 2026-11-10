@@ -1,89 +1,418 @@
- /* ========================================
-    NutriMate Custom Style
- ======================================== */
-
 
 /* ========================================
-   SIDEBAR COLOR
+   NUTRIMATE CUSTOM STYLE
 ======================================== */
 
-.nutrimate-sidebar {
-    background-color: #2E7D32;
+:root {
+    --nutri-green: #2E7D32;
+    --nutri-dark: #1B5E20;
+    --nutri-light: #E8F5E9;
+}
 
-    background-image: linear-gradient(
+/* SIDEBAR DESKTOP */
+.nutrimate-sidebar {
+    background: linear-gradient(
         180deg,
-        #2E7D32 10%,
-        #1B5E20 100%
+        var(--nutri-green) 10%,
+        var(--nutri-dark) 100%
     );
 }
 
+.nutrimate-sidebar .sidebar-brand {
+    color: #fff;
+    min-height: 75px;
+}
 
-/* ========================================
-   HEALTH SUMMARY
-======================================== */
+.nutrimate-sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 5px 12px;
+    border-radius: 12px;
+    transition: background-color 0.25s ease,
+                transform 0.25s ease,
+                color 0.25s ease;
+}
 
+.nutrimate-sidebar .nav-link i {
+    transition: transform 0.25s ease;
+}
+
+.nutrimate-sidebar .nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+
+.nutrimate-sidebar .nav-link:hover i {
+    transform: scale(1.12);
+}
+
+.nutrimate-sidebar .nav-item.active .nav-link {
+    color: var(--nutri-dark);
+    background: #fff;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10);
+}
+
+.nutrimate-sidebar .sidebar-heading {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* WARNA UMUM */
 .border-left-success {
     border-left: 0.25rem solid #66BB6A !important;
 }
 
+.text-success {
+    color: var(--nutri-green) !important;
+}
 
-/* ========================================
-   FOOD PLACEHOLDER
-======================================== */
+.btn-success {
+    background-color: var(--nutri-green);
+    border-color: var(--nutri-green);
+}
+
+.btn-success:hover {
+    background-color: var(--nutri-dark);
+    border-color: var(--nutri-dark);
+}
 
 .food-placeholder {
     height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f1f5;
+    color: #777;
+    font-size: 30px;
+}
 
+/* NAVBAR IKON BAWAH - ANDROID */
+@media (max-width: 767.98px) {
+
+    body {
+        padding-bottom: 78px;
+    }
+
+    /* Sidebar menjadi menu horizontal */
+    .nutrimate-sidebar {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 68px !important;
+        min-height: 68px !important;
+        z-index: 1030;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center;
+        justify-content: space-around;
+        margin: 0 !important;
+        padding: 4px 6px !important;
+        overflow: visible !important;
+        background: #fff !important;
+        background-image: none !important;
+        box-shadow: 0 -3px 18px rgba(0, 0, 0, 0.10);
+    }
+
+    /* Hilangkan logo teks, judul dan pemisah */
+    .nutrimate-sidebar .sidebar-brand,
+    .nutrimate-sidebar .sidebar-divider,
+    .nutrimate-sidebar .sidebar-heading,
+    .nutrimate-sidebar hr,
+    .nutrimate-sidebar > div {
+        display: none !important;
+    }
+
+    /* Setiap menu menjadi tombol ikon */
+    .nutrimate-sidebar .nav-item {
+        flex: 1 1 0;
+        min-width: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center;
+    }
+
+    .nutrimate-sidebar .nav-link {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        padding: 0 !important;
+        margin: 0 auto !important;
+        border-radius: 14px;
+        color: #788078;
+        background: transparent;
+        transform: none !important;
+    }
+
+    .nutrimate-sidebar .nav-link i {
+        margin: 0 !important;
+        font-size: 19px;
+        width: auto !important;
+    }
+
+    .nutrimate-sidebar .nav-link span {
+        display: none !important;
+    }
+
+    .nutrimate-sidebar .nav-item.active .nav-link {
+        color: var(--nutri-green);
+        background: var(--nutri-light);
+        box-shadow: none;
+    }
+
+    /* Sembunyikan tombol logout dari navbar utama.
+       Akses logout tetap tersedia dari halaman profil. */
+    .nutrimate-sidebar .nav-item form {
+        display: none !important;
+    }
+}
+
+
+```css
+/* ========================================
+   NUTRIMATE - ICON NAVIGATION
+======================================== */
+
+:root {
+    --nutrimate-green: #2e7d32;
+    --nutrimate-dark-green: #1b5e20;
+    --nutrimate-light-green: #e8f5e9;
+    --nutrimate-nav-width: 82px;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: #f7f9f7;
+}
+
+/* Navigasi desktop */
+.nutrimate-navigation {
+    position: fixed;
+    top: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: var(--nutrimate-nav-width);
+    z-index: 1050;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+
+    padding: 22px 12px;
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        var(--nutrimate-green),
+        var(--nutrimate-dark-green)
+    );
+
+    box-shadow: 0 10px 30px rgba(27, 94, 32, 0.18);
+}
+
+/* Logo */
+.nutrimate-nav-logo {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background-color: #f1f1f5;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
 
-    color: #777;
+    color: var(--nutrimate-green);
+    background: #fff;
+    border-radius: 16px;
 
-    font-size: 30px;
+    font-size: 24px;
+    text-decoration: none;
+    transition: transform 0.25s ease;
 }
 
+.nutrimate-nav-logo:hover {
+    color: var(--nutrimate-dark-green);
+    transform: rotate(-8deg) scale(1.05);
+}
+
+/* Kelompok ikon */
+.nutrimate-nav-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+/* Ikon menu */
+.nutrimate-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+
+    border: 0;
+    border-radius: 16px;
+
+    color: rgba(255, 255, 255, 0.8);
+    background: transparent;
+
+    font-size: 19px;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Hover */
+.nutrimate-nav-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+    transform: translateY(-3px);
+}
+
+/* Menu aktif */
+.nutrimate-nav-item.active {
+    color: var(--nutrimate-green);
+    background: #fff;
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
+}
+
+/* Logout tetap di bawah sidebar */
+.nutrimate-nav-logout {
+    margin-top: auto;
+}
+
+/* Ruang konten desktop */
+.nutrimate-main {
+    min-height: 100vh;
+    margin-left: 114px;
+    padding: 28px 28px 36px;
+}
 
 /* ========================================
-   GREEN TEXT
+   MOBILE / ANDROID
 ======================================== */
 
-.text-success {
-    color: #2E7D32 !important;
+@media (max-width: 767.98px) {
+    .nutrimate-navigation {
+        top: auto;
+        right: 12px;
+        bottom: 12px;
+        left: 12px;
+
+        width: auto;
+        height: 72px;
+
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 0;
+
+        padding: 8px 10px;
+        border-radius: 22px;
+    }
+
+    .nutrimate-nav-logo {
+        display: none;
+    }
+
+    .nutrimate-nav-menu {
+        flex: 1;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 4px;
+        width: auto;
+    }
+
+    .nutrimate-nav-item {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        font-size: 17px;
+    }
+
+    .nutrimate-nav-item:hover {
+        transform: none;
+    }
+
+    .nutrimate-nav-logout {
+        margin-top: 0;
+        margin-left: 4px;
+    }
+
+    .nutrimate-main {
+        margin-left: 0;
+        padding: 20px 14px 110px;
+    }
 }
 
-
-/* ========================================
-   GREEN BUTTON
-======================================== */
-
-.btn-success {
-    background-color: #2E7D32;
-
-    border-color: #2E7D32;
+/* Perbaikan warna ikon navigasi NutriMate */
+.nutrimate-nav-logo i {
+    color: #2E7D32;
 }
 
-.btn-success:hover {
-    background-color: #1B5E20;
-
-    border-color: #1B5E20;
-}
-
-
-/* ========================================
-   SIDEBAR TEXT
-======================================== */
-
-.nutrimate-sidebar .nav-link {
+.nutrimate-nav-item {
     color: rgba(255, 255, 255, 0.9);
 }
 
-.nutrimate-sidebar .nav-link:hover {
-    color: #ffffff;
+.nutrimate-nav-item i {
+    color: inherit;
 }
 
-.nutrimate-sidebar .sidebar-brand {
-    color: #ffffff;
+.nutrimate-nav-item:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.nutrimate-nav-item.active {
+    color: #2E7D32;
+    background: #FFFFFF;
+}
+
+.nutrimate-nav-item.active i {
+    color: #2E7D32;
+}
+
+/* Memperjelas ikon menu nonaktif */
+.nutrimate-navigation .nutrimate-nav-menu .nutrimate-nav-item {
+    color: #2E7D32 !important;
+    background: transparent;
+}
+
+/* Ikon harus mengikuti warna tombol */
+.nutrimate-navigation .nutrimate-nav-item i {
+    color: inherit !important;
+}
+
+/* Efek hover */
+.nutrimate-navigation .nutrimate-nav-menu .nutrimate-nav-item:hover {
+    color: #1B5E20 !important;
+    background: #E8F5E9;
+}
+
+/* Ikon menu aktif */
+.nutrimate-navigation .nutrimate-nav-menu .nutrimate-nav-item.active {
+    color: #2E7D32 !important;
+    background: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+}
+
+/* Ikon logo daun */
+.nutrimate-navigation .nutrimate-nav-logo i {
+    color: #2E7D32 !important;
+}
+
+/* Ikon logout */
+.nutrimate-navigation .nutrimate-nav-logout .nutrimate-nav-item {
+    color: #FFFFFF !important;
 }

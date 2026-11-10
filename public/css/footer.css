@@ -1,0 +1,110 @@
+/* =========================================================
+       NutriMate - Footer
+       Satu gaya dengan topbar dan halaman lain.
+    ========================================================= */
+
+    .ft {
+        --ft-green: #1cc88a;
+        --ft-green-d: #13a46f;
+        --ft-ink: #2e3b34;
+        --ft-muted: #7d8984;
+        --ft-line: #e4ede8;
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px 20px;
+        margin: 2rem 0 .5rem;
+        padding: .9rem 1.2rem;
+        border: 1px solid var(--ft-line);
+        border-radius: 20px;
+        background: linear-gradient(135deg, #f3fcf8 0%, #ffffff 60%);
+        box-shadow: 0 6px 24px rgba(30, 80, 55, .07);
+        transition: box-shadow .3s ease;
+    }
+    .ft:hover { box-shadow: 0 14px 34px rgba(30, 80, 55, .12); }
+
+    .ft button:focus-visible {
+        outline: 3px solid rgba(28, 200, 138, .45);
+        outline-offset: 2px;
+    }
+
+
+    /* ---------- Merek + hak cipta ---------- */
+    .ft-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+    .ft-logo {
+        flex: none;
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.05rem;
+        color: #fff;
+        background: linear-gradient(135deg, #36d6a0, var(--ft-green-d));
+        box-shadow: 0 6px 14px rgba(28, 200, 138, .35);
+        transition: transform .5s cubic-bezier(.22,1,.36,1);
+    }
+    .ft:hover .ft-logo { transform: rotate(-12deg) scale(1.08); }
+
+    .ft-text { display: flex; flex-direction: column; line-height: 1.3; }
+    .ft-copy { font-weight: 800; color: var(--ft-ink); }
+    .ft-tag { color: var(--ft-muted); }
+
+
+    /* ---------- Kembali ke atas ---------- */
+    .ft-top {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        padding: .5rem 1rem;
+        border: 1px solid var(--ft-line);
+        border-radius: 999px;
+        background: #fff;
+        color: var(--ft-green-d);
+        font: inherit;
+        font-size: .85rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+        transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease,
+                    background .3s ease, color .3s ease, border-color .3s ease;
+    }
+    .ft-top i { transition: transform .3s ease; }
+    .ft-top:hover {
+        transform: translateY(-3px);
+        border-color: transparent;
+        color: #fff;
+        background: linear-gradient(135deg, #2fd9a0, var(--ft-green-d));
+        box-shadow: 0 10px 22px rgba(28, 200, 138, .38);
+    }
+    .ft-top:hover i { animation: ftBounce .7s ease infinite; }
+    .ft-top:active { transform: translateY(0); }
+
+    @keyframes ftBounce {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-4px); }
+    }
+
+
+    /* ---------- Layar kecil ---------- */
+    @media (max-width: 575.98px) {
+        .ft { flex-direction: column; text-align: center; padding: 1rem; }
+        .ft-brand { flex-direction: column; gap: 8px; }
+        .ft-text { align-items: center; }
+    }
+
+    /* ---------- Hormati pengaturan "kurangi animasi" ---------- */
+    @media (prefers-reduced-motion: reduce) {
+        .ft *, .ft *::before, .ft *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+    }

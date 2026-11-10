@@ -53,4 +53,13 @@ class Makanan extends Model
         'berbumbu_balado',
         'berbumbu_bali',
     ];
+
+    public function preferensi()
+    {
+        return $this->hasMany(
+            PreferensiMakanan::class,
+            'makanan_id',
+            'id_makanan'
+        );
+    }
 }

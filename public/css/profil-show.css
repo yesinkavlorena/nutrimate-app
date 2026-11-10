@@ -1,0 +1,426 @@
+/* =========================================================
+   NutriMate - Profil Pengguna
+   Satu gaya dengan dashboard dan informasi gizi:
+   hijau lembut, hover terangkat, kilau menyapu,
+   garis bawah terisi, cahaya hijau mengikuti kursor.
+========================================================= */
+
+.pf-page {
+    --pf-green: #1cc88a;
+    --pf-green-d: #13a46f;
+    --pf-ink: #2e3b34;
+    --pf-muted: #7d8984;
+    --pf-line: #e4ede8;
+}
+
+/* ---------- Kelas Bootstrap 4 yang dipakai di Blade (layout memakai Bootstrap 5) ---------- */
+.pf-page .font-weight-bold { font-weight: 700 !important; }
+.pf-page .text-left { text-align: left !important; }
+.pf-page .mr-1 { margin-right: .25rem !important; }
+.pf-page .mr-2 { margin-right: .5rem !important; }
+.pf-page .btn-block { display: block; width: 100%; }
+.pf-page .text-gray-300 { color: #cfe3d9 !important; }
+.pf-page .text-gray-800 { color: var(--pf-ink) !important; }
+
+.pf-page button:focus-visible,
+.pf-page a:focus-visible {
+    outline: 3px solid rgba(28, 200, 138, .45);
+    outline-offset: 2px;
+}
+
+
+/* ---------- Header ---------- */
+.pf-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 1.6rem 1.9rem;
+    border: 1px solid var(--pf-line);
+    border-radius: 22px;
+    background: linear-gradient(135deg, #eafaf3 0%, #f7fffb 60%, #ffffff 100%);
+    box-shadow: 0 6px 24px rgba(30, 80, 55, .07);
+    transition: box-shadow .3s ease;
+}
+.pf-hero:hover { box-shadow: 0 14px 34px rgba(30, 80, 55, .14); }
+.pf-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        320px circle at var(--mx, 90%) var(--my, 10%),
+        rgba(28, 200, 138, .24),
+        transparent 70%
+    );
+}
+.pf-hero > * { position: relative; }
+.pf-hero h1 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 800;
+    background: linear-gradient(90deg, #1f6f50, var(--pf-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+}
+.pf-hero p { color: var(--pf-muted) !important; }
+
+
+/* ---------- Kartu besar (pembungkus): tidak terangkat, cahaya mengikuti kursor ---------- */
+.pf-page .card.pf-panel {
+    position: relative;
+    border: 1px solid var(--pf-line) !important;
+    border-radius: 22px !important;
+    background: linear-gradient(135deg, #f3fcf8 0%, #ffffff 55%) !important;
+    box-shadow: 0 6px 24px rgba(30, 80, 55, .07) !important;
+    transition: box-shadow .3s ease;
+    animation: pfIn .6s cubic-bezier(.22, 1, .36, 1) both;
+}
+.pf-page .row > div:nth-child(2) > .card.pf-panel { animation-delay: .08s; }
+.pf-page .card.pf-panel:hover { box-shadow: 0 14px 34px rgba(30, 80, 55, .14) !important; }
+
+.pf-page .card.pf-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+        320px circle at var(--mx, 92%) var(--my, 8%),
+        rgba(28, 200, 138, .2),
+        transparent 70%
+    );
+}
+.pf-page .card.pf-panel > * { position: relative; z-index: 1; }
+
+.pf-page .card.pf-panel > .card-header,
+.pf-page .card.pf-panel > .card-header.bg-white {
+    background: transparent !important;
+    border-bottom: 1px solid var(--pf-line);
+    border-radius: 22px 22px 0 0;
+}
+
+@keyframes pfIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+}
+
+
+/* ---------- Avatar ---------- */
+.profile-avatar {
+    position: relative;
+    width: 104px;
+    height: 104px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 2.6rem;
+    color: #fff;
+    background: linear-gradient(135deg, #36d6a0, var(--pf-green-d));
+    box-shadow: 0 8px 20px rgba(28, 200, 138, .35);
+    transition: transform .5s cubic-bezier(.22, 1, .36, 1);
+}
+.profile-avatar::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(28, 200, 138, .45);
+    animation: pfPulse 2.4s ease-out infinite;
+}
+.profile-avatar:hover { transform: scale(1.1) rotate(-6deg); }
+@keyframes pfPulse {
+    0%   { transform: scale(.92); opacity: .9; }
+    100% { transform: scale(1.25); opacity: 0; }
+}
+
+
+/* ---------- Kotak info (nama, usia, berat, tinggi, aktivitas) ---------- */
+.pf-page .profile-info-box {
+    --accent: #1cc88a;
+    --accent-dark: #13a46f;
+    --accent-soft: rgba(28, 200, 138, .13);
+    --accent-glow: rgba(28, 200, 138, .32);
+    position: relative;
+    overflow: hidden;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border: 1px solid var(--pf-line);
+    border-left: 5px solid var(--accent);
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1),
+                box-shadow .35s ease,
+                border-color .35s ease;
+}
+.pf-page .profile-info-box.pf-teal   { --accent: #2bb5c9; --accent-dark: #1b8fa1; --accent-soft: rgba(43,181,201,.15); --accent-glow: rgba(43,181,201,.35); }
+.pf-page .profile-info-box.pf-purple { --accent: #5a67d8; --accent-dark: #434fb5; --accent-soft: rgba(90,103,216,.14); --accent-glow: rgba(90,103,216,.35); }
+.pf-page .profile-info-box.pf-orange { --accent: #f5873b; --accent-dark: #d46a1f; --accent-soft: rgba(245,135,59,.15); --accent-glow: rgba(245,135,59,.35); }
+.pf-page .profile-info-box.pf-yellow { --accent: #e9b020; --accent-dark: #c28f0b; --accent-soft: rgba(233,176,32,.17); --accent-glow: rgba(233,176,32,.38); }
+
+.pf-page .profile-info-box:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 16px 30px var(--accent-glow);
+}
+
+/* kilau menyapu */
+.pf-page .profile-info-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .7), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    z-index: 2;
+}
+.pf-page .profile-info-box:hover::before { animation: pfSweep .9s ease; }
+@keyframes pfSweep { to { left: 140%; } }
+
+/* garis bawah terisi */
+.pf-page .profile-info-box::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+    transition: width .8s cubic-bezier(.22, 1, .36, 1);
+}
+.pf-page .profile-info-box:hover::after { width: 100%; }
+@media (hover: none) {
+    .pf-page .profile-info-box::after { width: 100%; }
+}
+
+.profile-label {
+    margin-bottom: .25rem;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent, var(--pf-green-d));
+}
+.profile-value {
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--pf-ink);
+    transform-origin: left center;
+    transition: transform .3s ease, color .3s ease;
+}
+.pf-page .profile-info-box:hover .profile-value {
+    transform: scale(1.06);
+    color: var(--accent-dark);
+}
+.profile-unit {
+    margin-left: .15rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--pf-muted);
+}
+
+
+/* ---------- Progress aktivitas ---------- */
+.pf-page .progress {
+    height: 12px !important;
+    border-radius: 12px;
+    background: #e3eee8;
+    overflow: hidden;
+}
+.pf-page .progress-bar {
+    position: relative;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #4ee3b0, var(--pf-green-d)) !important;
+    transition: width 1.3s cubic-bezier(.22, 1, .36, 1);
+}
+.pf-page .progress-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: pfShine 2.6s linear infinite;
+}
+@keyframes pfShine {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+
+/* ---------- Kartu preferensi makanan ---------- */
+.food-preference-card {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--pf-line);
+    border-radius: 18px;
+    box-shadow: 0 4px 14px rgba(30, 80, 55, .06);
+    transition: transform .35s cubic-bezier(.22, 1, .36, 1),
+                box-shadow .35s ease,
+                border-color .35s ease;
+}
+.food-preference-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--pf-green);
+    box-shadow: 0 18px 34px rgba(28, 200, 138, .28);
+}
+.food-preference-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .55), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    z-index: 3;
+}
+.food-preference-card:hover::before { animation: pfSweep .9s ease; }
+.food-preference-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 4px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(90deg, var(--pf-green-d), #4ee3b0);
+    transition: width .8s cubic-bezier(.22, 1, .36, 1);
+    z-index: 3;
+}
+.food-preference-card:hover::after { width: 100%; }
+@media (hover: none) {
+    .food-preference-card::after { width: 100%; }
+}
+
+.food-preference-image {
+    height: 170px;
+    overflow: hidden;
+}
+.food-preference-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s cubic-bezier(.22, 1, .36, 1), filter .4s ease;
+}
+.food-preference-card:hover .food-preference-image img {
+    transform: scale(1.1);
+    filter: saturate(1.12) brightness(1.03);
+}
+.food-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    color: #fff;
+    background: linear-gradient(135deg, #7be3bf, var(--pf-green-d));
+    transition: transform .7s cubic-bezier(.22, 1, .36, 1);
+}
+.food-preference-card:hover .food-image-placeholder { transform: scale(1.1); }
+
+/* kotak info di dalam kartu makanan: polos, efeknya ikut kartu */
+.pf-page .food-preference-card .profile-info-box {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: .9rem 1.1rem 1.1rem;
+}
+.pf-page .food-preference-card .profile-info-box:hover {
+    transform: none;
+    box-shadow: none;
+}
+.pf-page .food-preference-card .profile-info-box::before,
+.pf-page .food-preference-card .profile-info-box::after { display: none; }
+
+.food-pref-name { transition: color .3s ease, transform .3s ease; }
+.food-preference-card:hover .food-pref-name {
+    color: var(--pf-green-d) !important;
+    transform: translateX(4px);
+}
+
+
+/* ---------- Badge ---------- */
+.pf-page .badge {
+    border-radius: 50px;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+.pf-page .badge-success { background: rgba(28, 200, 138, .15); color: var(--pf-green-d); }
+.pf-page .badge-warning { background: rgba(233, 176, 32, .2); color: #a87d06; }
+
+
+/* ---------- Tombol ---------- */
+.pf-page .btn-success {
+    border: 0;
+    border-radius: 12px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #2fd9a0, var(--pf-green-d));
+    box-shadow: 0 6px 14px rgba(28, 200, 138, .3);
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.pf-page .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(28, 200, 138, .4);
+    filter: brightness(1.05);
+}
+.pf-page .btn-success:active { transform: translateY(0); }
+
+
+/* ---------- Alert sukses ---------- */
+.pf-page .alert-success {
+    border: 0;
+    border-left: 5px solid var(--pf-green);
+    border-radius: 14px;
+    background: #e9f9f2;
+    color: #146c4a;
+    animation: pfSlide .5s ease;
+}
+@keyframes pfSlide {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: none; }
+}
+.pf-page .alert .close {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(28, 200, 138, .15);
+    color: #146c4a;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, transform .3s ease;
+}
+.pf-page .alert .close:hover {
+    background: #146c4a;
+    color: #fff;
+    transform: translateY(-50%) rotate(90deg);
+}
+
+
+/* ---------- Hormati pengaturan "kurangi animasi" ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .pf-page *, .pf-page *::before, .pf-page *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

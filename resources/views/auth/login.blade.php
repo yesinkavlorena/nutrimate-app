@@ -2,196 +2,193 @@
 
 @section('title', 'Login - NutriMate')
 
-@section('body-class', 'bg-gradient-primary')
+@section('body-class', 'lg-body')
+
+{{-- CSS halaman login (butuh @stack('styles') di layouts.app) --}}
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+@endpush
+
+{{-- JS halaman login (butuh @stack('scripts') di layouts.app) --}}
+@push('scripts')
+    <script src="{{ asset('js/login.js') }}" defer></script>
+@endpush
 
 @section('content')
 
-<div class="container">
+<div class="lg-page">
 
-    <!-- Outer Row -->
-    <div class="row justify-content-center">
+    {{-- =========================================================
+         LATAR BELAKANG (gradasi hijau, gelembung, ikon makanan)
+    ========================================================== --}}
+    <div class="lg-bg" id="lgBg" aria-hidden="true">
 
-        <div class="col-xl-10 col-lg-12 col-md-9">
+        <span class="lg-blob b1"></span>
+        <span class="lg-blob b2"></span>
+        <span class="lg-blob b3"></span>
 
-            <div class="card o-hidden border-0 shadow-lg my-5">
+        <span class="lg-float f1"><i class="fas fa-apple-alt"></i></span>
+        <span class="lg-float f2"><i class="fas fa-carrot"></i></span>
+        <span class="lg-float f3"><i class="fas fa-fish"></i></span>
+        <span class="lg-float f4"><i class="fas fa-egg"></i></span>
+        <span class="lg-float f5"><i class="fas fa-lemon"></i></span>
+        <span class="lg-float f6"><i class="fas fa-bread-slice"></i></span>
 
-                <div class="card-body p-0">
-
-                    <!-- Nested Row -->
-                    <div class="row">
-
-                        <!-- Logo NutriMate -->
-                        <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center">
-
-                            <img
-                                src="{{ asset('img/nutrimate.png') }}"
-                                alt="Logo NutriMate"
-                                class="img-fluid"
-                                style="max-width: 70%;"
-                            >
-
-                        </div>
+    </div>
 
 
-                        <!-- Login -->
-                        <div class="col-lg-6">
+    {{-- =========================================================
+         KARTU LOGIN
+    ========================================================== --}}
+    <main class="lg-main">
 
-                            <div class="p-5">
+        <div class="lg-card" id="lgCard">
 
-                                <div class="text-center">
+            <div class="lg-avatar">
+                <i class="fas fa-user"></i>
+            </div>
 
-                                    <h1 class="h4 text-gray-900 mb-4">
-                                        Welcome Back!
-                                    </h1>
+            <h2 class="lg-title">Selamat Datang!</h2>
 
-                                </div>
-
-
-                                {{-- Pesan sukses --}}
-                                @if(session('success'))
-
-                                    <div class="alert alert-success">
-                                        {{ session('success') }}
-                                    </div>
-
-                                @endif
+            <p class="lg-lead">Masuk untuk melanjutkan ke NutriMate.</p>
 
 
-                                {{-- Error --}}
-                                @if($errors->any())
-
-                                    <div class="alert alert-danger">
-
-                                        @foreach($errors->all() as $error)
-
-                                            <div>
-                                                {{ $error }}
-                                            </div>
-
-                                        @endforeach
-
-                                    </div>
-
-                                @endif
+            {{-- Pesan sukses --}}
+            @if(session('success'))
+                <div class="lg-alert" role="status">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
 
 
-                                <!-- Form Login -->
-                                <form
-                                    class="user"
-                                    action="{{ route('login.store') }}"
-                                    method="POST"
-                                >
-
-                                    @csrf
-
-
-                                    <!-- Email -->
-                                    <div class="form-group">
-
-                                        <input
-                                            type="email"
-                                            class="form-control form-control-user"
-                                            id="exampleInputEmail"
-                                            name="email"
-                                            value="{{ old('email') }}"
-                                            placeholder="Enter Email Address..."
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <!-- Password -->
-                                    <div class="form-group">
-
-                                        <input
-                                            type="password"
-                                            class="form-control form-control-user"
-                                            id="exampleInputPassword"
-                                            name="password"
-                                            placeholder="Password"
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <!-- Remember Me -->
-                                    <div class="form-group">
-
-                                        <div class="custom-control custom-checkbox small">
-
-                                            <input
-                                                type="checkbox"
-                                                class="custom-control-input"
-                                                id="customCheck"
-                                                name="remember"
-                                            >
-
-                                            <label
-                                                class="custom-control-label"
-                                                for="customCheck"
-                                            >
-                                                Remember Me
-                                            </label>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <!-- Login Button -->
-                                    <button
-                                        type="submit"
-                                        class="btn btn-primary btn-user btn-block"
-                                    >
-                                        Login
-                                    </button>
-
-                                </form>
-
-
-                                <hr>
-
-
-                                <!-- Forgot Password -->
-                                <div class="text-center">
-
-                                    <a
-                                        class="small"
-                                        href="#"
-                                    >
-                                        Forgot Password?
-                                    </a>
-
-                                </div>
-
-
-                                <!-- Register -->
-                                <div class="text-center">
-
-                                    <a
-                                        class="small"
-                                        href="{{ route('register') }}"
-                                    >
-                                        Create an Account!
-                                    </a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
+            {{-- Error --}}
+            @if($errors->any())
+                <div class="lg-alert err" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div class="lg-alert-list">
+                        @foreach($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
                     </div>
+                </div>
+            @endif
+
+
+            <!-- Form Login -->
+            <form action="{{ route('login.store') }}" method="POST" id="lgForm">
+
+                @csrf
+
+                <!-- Email -->
+                <div class="lg-field @error('email') has-error @enderror">
+
+                    <input
+                        type="email"
+                        id="exampleInputEmail"
+                        name="email"
+                        value="{{ old('email') }}"
+                        placeholder=" "
+                        required
+                        autocomplete="email"
+                        autofocus
+                    >
+
+                    <label for="exampleInputEmail">Email Address</label>
+
+                    <i class="fas fa-envelope lg-ico"></i>
 
                 </div>
 
-            </div>
+
+                <!-- Password -->
+                <div class="lg-field @error('password') has-error @enderror">
+
+                    <input
+                        type="password"
+                        id="exampleInputPassword"
+                        name="password"
+                        placeholder=" "
+                        required
+                        autocomplete="current-password"
+                    >
+
+                    <label for="exampleInputPassword">Password</label>
+
+                    <i class="fas fa-lock lg-ico"></i>
+
+                    <button type="button"
+                            class="lg-eye"
+                            id="lgEye"
+                            aria-label="Tampilkan password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="lg-caps" id="lgCaps" hidden>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Caps Lock sedang aktif
+                </div>
+
+
+                <div class="lg-row">
+
+                    <!-- Remember Me -->
+                    <label class="lg-check" for="customCheck">
+
+                        <input type="checkbox"
+                               id="customCheck"
+                               name="remember"
+                               {{ old('remember') ? 'checked' : '' }}>
+
+                        <span class="lg-box"><i class="fas fa-check"></i></span>
+
+                        Remember Me
+
+                    </label>
+
+                    <!-- Forgot Password -->
+                    <a class="lg-link" href="#">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- Login Button -->
+                <button type="submit" class="lg-btn" id="lgSubmit">
+
+                    <span class="lg-btn-label">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </span>
+
+                    <span class="lg-btn-wait" hidden>
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Memproses...
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- Register -->
+            <p class="lg-foot">
+                <a class="lg-link" href="{{ route('register') }}">
+                    Create an Account!
+                </a>
+            </p>
+
+            <p class="lg-copy">
+                &copy; NutriMate {{ date('Y') }}
+            </p>
 
         </div>
 
-    </div>
+    </main>
 
 </div>
 

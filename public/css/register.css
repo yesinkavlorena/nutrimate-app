@@ -1,0 +1,51 @@
+/* =========================================================
+   NutriMate - Halaman Register
+   Tambahan di atas login.css (latar, kartu, kolom isian,
+   tombol, dan tautan dipakai bersama).
+========================================================= */
+
+.rg-card { max-width: 470px; }
+
+/* tombol register mengikuti jarak formulir yang lebih panjang */
+.rg-submit { margin-top: 1.3rem; }
+.lg-btn:hover .fa-user-plus { transform: translateX(4px); }
+
+
+/* ---------- Kekuatan password ---------- */
+.rg-meter {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin: -.55rem .3rem 1.1rem;
+    animation: lgSlide .3s ease;
+}
+.rg-bars { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.rg-bars span {
+    height: 5px;
+    border-radius: 3px;
+    background: var(--line);
+    transition: background .3s ease;
+}
+.rg-meter-text { min-width: 64px; text-align: right; font-weight: 700; color: var(--muted); }
+
+.rg-meter[data-level="1"] .rg-bars span:nth-child(-n+1) { background: var(--err); }
+.rg-meter[data-level="2"] .rg-bars span:nth-child(-n+2) { background: #f0a030; }
+.rg-meter[data-level="3"] .rg-bars span:nth-child(-n+3) { background: #7cc84a; }
+.rg-meter[data-level="4"] .rg-bars span:nth-child(-n+4) { background: var(--g); }
+
+.rg-meter[data-level="1"] .rg-meter-text { color: var(--err); }
+.rg-meter[data-level="2"] .rg-meter-text { color: #b97a14; }
+.rg-meter[data-level="3"] .rg-meter-text { color: #5d9c33; }
+.rg-meter[data-level="4"] .rg-meter-text { color: var(--g-d); }
+
+
+/* ---------- Petunjuk password cocok ---------- */
+.rg-match {
+    margin: -.55rem .3rem 1rem;
+    font-size: .82rem;
+    font-weight: 700;
+    animation: lgSlide .3s ease;
+}
+.rg-match i { margin-right: .3rem; }
+.rg-match.ok  { color: var(--g-d); }
+.rg-match.bad { color: var(--err); }
