@@ -7,37 +7,55 @@ Aplikasi ini menerapkan metode **Hybrid Recommender System** dengan menggabungka
 ## 📌 Fitur Utama
 
 - **Manajemen Profil Pengguna** – Mengelola data usia, jenis kelamin, berat badan, tinggi badan, dan aktivitas fisik.
-- **Perhitungan Kebutuhan Energi** – Menghitung BMI, BMR, TDEE, serta target kebutuhan kalori harian.
+- **Perhitungan Kebutuhan Energi** – Menghitung BMI, BMR, TDEE, serta target kebutuhan kalori harian dan target kalori pada setiap waktu makan.
 - **Preferensi Makanan** – Memilih 7 makanan favorit sebagai dasar personalisasi rekomendasi.
-- **Rekomendasi Makanan Personal** – Menghasilkan rekomendasi berdasarkan kebutuhan energi, makronutrien, dan karakteristik makanan.
+- **Rekomendasi Makanan Personal** – Menghasilkan 5 rekomendasi teratas (Top-5) pada waktu makan yang dipilih berdasarkan kebutuhan energi, kesesuaian makronutrien, dan karakteristik makanan yang disukai pengguna.
 - **Informasi Nilai Gizi** – Menampilkan informasi kalori, protein, lemak, dan karbohidrat pada makanan.
 - **Riwayat Rekomendasi** – Menyimpan dan menampilkan riwayat rekomendasi makanan pengguna.
 
 ## ⚙️ Metode Rekomendasi
 
-NutriMate menggunakan pendekatan **Hybrid Recommender System** dengan arsitektur Sequential (Cascade), melalui dua tahapan:
+NutriMate menggunakan pendekatan **Hybrid Recommender System** yang menggabungkan **Health-Based Filtering (HBF)** dan **Content-Based Filtering (CBF)**. Prosesnya dilakukan melalui penyaringan bertahap, kemudian dilanjutkan dengan penggabungan dua skor secara berbobot (*weighted*) untuk menentukan peringkat makanan.
+
+Alur proses rekomendasi pada setiap waktu makan:
+
+1. Sistem mengambil target kalori pada waktu makan yang dipilih (sarapan, makan siang, makan malam, atau camilan).
+2. **Health-Based Filtering** menyaring makanan berdasarkan waktu makan dan rentang kalori.
+3. Pada makanan yang lolos penyaringan, sistem menghitung **Similarity** (Content-Based Filtering) dan **Macro Score**.
+4. Kedua nilai digabungkan menjadi **Hybrid Score**, lalu makanan diurutkan dan 5 teratas ditampilkan.
 
 ### 1. Health-Based Filtering (HBF)
 
-Tahap pertama melakukan penyaringan makanan berdasarkan:
-- Waktu makan (sarapan, makan siang, makan malam, dan camilan).
-- Kesesuaian kebutuhan kalori dengan toleransi sebesar ±20% dari target kalori per waktu makan.
-- Kesesuaian kandungan makronutrien, meliputi protein, lemak, dan karbohidrat.
+Health-Based Filtering menyaring makanan agar sesuai dengan kebutuhan energi pengguna, berdasarkan dua kriteria:
+
+- **Waktu makan** – hanya makanan yang sesuai dengan waktu makan yang dipilih (sarapan, makan siang, makan malam, atau camilan).
+- **Kalori** – hanya makanan dengan kalori dalam rentang ±20% dari target kalori pada waktu makan tersebut.
+
+Target kalori per waktu makan dihitung dari TDEE dengan proporsi sarapan 16,7%, makan siang 30,5%, makan malam 33,8%, dan camilan 19,0%.
 
 ### 2. Content-Based Filtering (CBF)
 
-Tahap kedua menghitung tingkat kemiripan makanan berdasarkan karakteristik makanan yang disukai pengguna menggunakan metode **Cosine Similarity**.
+Content-Based Filtering menghitung tingkat kemiripan makanan dengan selera pengguna menggunakan metode **Cosine Similarity**. Profil preferensi pengguna dibentuk dari 7 makanan favorit, yaitu proporsi kemunculan setiap karakteristik makanan, kemudian dibandingkan dengan karakteristik setiap makanan yang lolos penyaringan.
 
 Karakteristik makanan yang digunakan meliputi:
+
 - Cara pengolahan.
 - Cita rasa.
 - Gaya masakan.
 - Bahan utama.
 - Karakteristik tambahan makanan.
 
-### 3. Hybrid Score
+### 3. Macro Score
 
-Hasil rekomendasi diperoleh dengan menggabungkan nilai Content-Based Filtering dan Macro Score menggunakan persamaan:
+Macro Score menilai kesesuaian kandungan karbohidrat, protein, dan lemak pada makanan terhadap target makronutrien pengguna pada waktu makan yang dipilih.
+
+- Target makronutrien dibentuk dari rentang AMDR terhadap kebutuhan kalori harian: karbohidrat 45–65%, protein 10–35%, dan lemak 20–35%, kemudian dibagi sesuai proporsi energi waktu makan.
+- Makanan yang kandungan makronutriennya berada dalam rentang target memperoleh skor 1. Di luar rentang, skor berkurang sesuai besarnya selisih.
+- Macro Score merupakan rata-rata skor karbohidrat, protein, dan lemak, dengan nilai antara 0 sampai 1.
+
+### 4. Hybrid Score
+
+Nilai rekomendasi akhir diperoleh dengan menggabungkan nilai kemiripan (Similarity) dari Content-Based Filtering dan nilai kesesuaian makronutrien (Macro Score) menggunakan persamaan:
 
 **Hybrid Score = (0.5 × Similarity) + (0.5 × Macro Score)**
 
@@ -93,7 +111,7 @@ Ikuti langkah-langkah berikut untuk menjalankan NutriMate secara lokal.
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/USERNAME/nutrimate-app.git
+git clone https://github.com/yesinkavlorena/nutrimate-app.git
 ```
 
 ### 2. Masuk ke Direktori Project
